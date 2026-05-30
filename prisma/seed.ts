@@ -1,212 +1,343 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { PrismaClient, PricingType } = require("@prisma/client");
+const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Categories
-  const categories = [
-    { name: "Writing", slug: "writing", icon: "✍️", color: "#f59e0b" },
-    { name: "Image Generation", slug: "image-generation", icon: "🎨", color: "#8b5cf6" },
-    { name: "Coding", slug: "coding", icon: "💻", color: "#3b82f6" },
-    { name: "Video", slug: "video", icon: "🎬", color: "#ef4444" },
-    { name: "Audio", slug: "audio", icon: "🎵", color: "#10b981" },
-    { name: "Productivity", slug: "productivity", icon: "⚡", color: "#f97316" },
-    { name: "SEO", slug: "seo", icon: "🔍", color: "#06b6d4" },
-    { name: "Research", slug: "research", icon: "🔬", color: "#6366f1" },
-    { name: "Marketing", slug: "marketing", icon: "📣", color: "#ec4899" },
-    { name: "Data Analysis", slug: "data-analysis", icon: "📊", color: "#84cc16" },
-    { name: "Chatbots", slug: "chatbots", icon: "🤖", color: "#14b8a6" },
-    { name: "Design", slug: "design", icon: "🖌️", color: "#a855f7" },
+  // ─── Categories ───────────────────────────────────────────────
+  const categoryDefs = [
+    { name: "Chatbots & Assistants",     slug: "chatbots",          icon: "🤖", color: "#6366f1" },
+    { name: "Coding Tools",              slug: "coding",             icon: "💻", color: "#3b82f6" },
+    { name: "Image Generation",          slug: "image-generation",   icon: "🎨", color: "#8b5cf6" },
+    { name: "Video Generation",          slug: "video",              icon: "🎬", color: "#ef4444" },
+    { name: "Writing Tools",             slug: "writing",            icon: "✍️", color: "#f59e0b" },
+    { name: "Presentation Tools",        slug: "presentations",      icon: "📊", color: "#10b981" },
+    { name: "Voice & Audio Tools",       slug: "audio",              icon: "🎙️", color: "#14b8a6" },
+    { name: "Music Generation",          slug: "music",              icon: "🎵", color: "#ec4899" },
+    { name: "Productivity Tools",        slug: "productivity",       icon: "⚡", color: "#f97316" },
+    { name: "Automation Tools",          slug: "automation",         icon: "🔧", color: "#84cc16" },
+    { name: "Research Tools",            slug: "research",           icon: "🔬", color: "#06b6d4" },
+    { name: "Website Builders",          slug: "website-builders",   icon: "🌐", color: "#a855f7" },
+    { name: "Design Tools",              slug: "design",             icon: "🖌️", color: "#f43f5e" },
+    { name: "SEO & Marketing",           slug: "seo-marketing",      icon: "📣", color: "#eab308" },
+    { name: "Tools for Students",        slug: "students",           icon: "📚", color: "#22c55e" },
   ];
 
-  for (const cat of categories) {
+  for (const cat of categoryDefs) {
     await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: {},
+      update: cat,
       create: cat,
     });
   }
 
-  const catMap: Record<string, string> = {};
   const allCats = await prisma.category.findMany();
+  const catMap: Record<string, string> = {};
   for (const c of allCats) catMap[c.slug] = c.id;
 
-  // Tools
+  const FREE      = "FREE";
+  const FREEMIUM  = "FREEMIUM";
+  const PAID      = "PAID";
+
+  // ─── Tools ────────────────────────────────────────────────────
   const tools = [
-    {
-      name: "ChatGPT",
-      slug: "chatgpt",
-      description: "OpenAI's powerful conversational AI assistant for writing, coding, and analysis.",
-      website: "https://chat.openai.com",
-      pricing: PricingType.FREEMIUM,
-      featured: true,
-      verified: true,
-      apiAvailable: true,
-      categorySlug: "chatbots",
-      tags: ["openai", "gpt", "chatbot", "writing"],
-    },
-    {
-      name: "Midjourney",
-      slug: "midjourney",
-      description: "AI art generator that creates stunning images from text prompts via Discord.",
-      website: "https://midjourney.com",
-      pricing: PricingType.PAID,
-      featured: true,
-      verified: true,
-      apiAvailable: false,
-      categorySlug: "image-generation",
-      tags: ["art", "images", "discord", "creative"],
-    },
-    {
-      name: "GitHub Copilot",
-      slug: "github-copilot",
-      description: "AI pair programmer that suggests code completions in your editor.",
-      website: "https://github.com/features/copilot",
-      pricing: PricingType.PAID,
-      featured: true,
-      verified: true,
-      apiAvailable: false,
-      categorySlug: "coding",
-      tags: ["coding", "github", "vscode", "autocomplete"],
-    },
-    {
-      name: "Notion AI",
-      slug: "notion-ai",
-      description: "Built-in AI writing and summarization tools inside Notion.",
-      website: "https://www.notion.so/product/ai",
-      pricing: PricingType.FREEMIUM,
-      featured: false,
-      verified: true,
-      apiAvailable: false,
-      categorySlug: "productivity",
-      tags: ["notion", "writing", "notes", "productivity"],
-    },
-    {
-      name: "Runway ML",
-      slug: "runway-ml",
-      description: "AI-powered creative video tools including text-to-video generation.",
-      website: "https://runwayml.com",
-      pricing: PricingType.FREEMIUM,
-      featured: true,
-      verified: true,
-      apiAvailable: true,
-      categorySlug: "video",
-      tags: ["video", "creative", "text-to-video"],
-    },
-    {
-      name: "ElevenLabs",
-      slug: "elevenlabs",
-      description: "Realistic AI voice synthesis and cloning for any use case.",
-      website: "https://elevenlabs.io",
-      pricing: PricingType.FREEMIUM,
-      featured: false,
-      verified: true,
-      apiAvailable: true,
-      categorySlug: "audio",
-      tags: ["voice", "tts", "audio", "cloning"],
-    },
-    {
-      name: "Perplexity AI",
-      slug: "perplexity-ai",
-      description: "AI-powered search engine that gives cited, real-time answers.",
-      website: "https://perplexity.ai",
-      pricing: PricingType.FREEMIUM,
-      featured: true,
-      verified: true,
-      apiAvailable: true,
-      categorySlug: "research",
-      tags: ["search", "research", "citations", "web"],
-    },
-    {
-      name: "Jasper AI",
-      slug: "jasper-ai",
-      description: "AI writing assistant built for marketing teams and content creators.",
-      website: "https://jasper.ai",
-      pricing: PricingType.PAID,
-      featured: false,
-      verified: true,
-      apiAvailable: true,
-      categorySlug: "writing",
-      tags: ["writing", "marketing", "content", "copywriting"],
-    },
-    {
-      name: "Canva AI",
-      slug: "canva-ai",
-      description: "AI design tools built into Canva for instant graphics and visuals.",
-      website: "https://canva.com",
-      pricing: PricingType.FREEMIUM,
-      featured: false,
-      verified: true,
-      apiAvailable: false,
-      categorySlug: "design",
-      tags: ["design", "graphics", "marketing", "templates"],
-    },
-    {
-      name: "Surfer SEO",
-      slug: "surfer-seo",
-      description: "AI-powered SEO optimization tool for content that ranks on Google.",
-      website: "https://surferseo.com",
-      pricing: PricingType.PAID,
-      featured: false,
-      verified: true,
-      apiAvailable: false,
-      categorySlug: "seo",
-      tags: ["seo", "content", "ranking", "google"],
-    },
-    {
-      name: "Claude",
-      slug: "claude",
-      description: "Anthropic's AI assistant known for nuanced reasoning and long context windows.",
-      website: "https://claude.ai",
-      pricing: PricingType.FREEMIUM,
-      featured: true,
-      verified: true,
-      apiAvailable: true,
-      categorySlug: "chatbots",
-      tags: ["anthropic", "chatbot", "writing", "coding"],
-    },
-    {
-      name: "DALL·E 3",
-      slug: "dalle-3",
-      description: "OpenAI's image generation model integrated into ChatGPT and the API.",
-      website: "https://openai.com/dall-e-3",
-      pricing: PricingType.FREEMIUM,
-      featured: false,
-      verified: true,
-      apiAvailable: true,
-      categorySlug: "image-generation",
-      tags: ["openai", "images", "art", "generation"],
-    },
+    // ── 1. Chatbots & Assistants ──────────────────────────────
+    { name: "ChatGPT",         slug: "chatgpt",          pricing: FREEMIUM, categorySlug: "chatbots",        featured: true,  verified: true,  apiAvailable: true,  description: "OpenAI's flagship conversational AI for writing, coding, analysis, and more.",               website: "https://chat.openai.com",          tags: ["openai","gpt","chatbot","writing","coding"] },
+    { name: "Claude",          slug: "claude",            pricing: FREEMIUM, categorySlug: "chatbots",        featured: true,  verified: true,  apiAvailable: true,  description: "Anthropic's AI assistant known for nuanced reasoning and large context windows.",           website: "https://claude.ai",                tags: ["anthropic","chatbot","writing","coding"] },
+    { name: "Gemini",          slug: "gemini",            pricing: FREEMIUM, categorySlug: "chatbots",        featured: true,  verified: true,  apiAvailable: true,  description: "Google's multimodal AI assistant integrated across Google Workspace.",                      website: "https://gemini.google.com",        tags: ["google","chatbot","multimodal"] },
+    { name: "Microsoft Copilot", slug: "microsoft-copilot", pricing: FREEMIUM, categorySlug: "chatbots",     featured: false, verified: true,  apiAvailable: true,  description: "Microsoft's AI assistant powered by GPT-4, built into Windows and Office 365.",            website: "https://copilot.microsoft.com",    tags: ["microsoft","gpt","office","windows"] },
+    { name: "Perplexity AI",   slug: "perplexity-ai",    pricing: FREEMIUM, categorySlug: "chatbots",        featured: true,  verified: true,  apiAvailable: true,  description: "AI-powered search engine that provides cited, real-time answers from the web.",             website: "https://perplexity.ai",            tags: ["search","research","citations","web"] },
+    { name: "Grok",            slug: "grok",              pricing: PAID,     categorySlug: "chatbots",        featured: false, verified: true,  apiAvailable: false, description: "xAI's witty AI assistant with real-time access to X (Twitter) data.",                       website: "https://grok.x.ai",                tags: ["xai","chatbot","twitter","real-time"] },
+    { name: "DeepSeek",        slug: "deepseek",          pricing: FREE,     categorySlug: "chatbots",        featured: false, verified: true,  apiAvailable: true,  description: "Powerful open-source AI model from China with strong coding and reasoning capabilities.",     website: "https://deepseek.com",             tags: ["open-source","coding","reasoning"] },
+    { name: "Poe",             slug: "poe",               pricing: FREEMIUM, categorySlug: "chatbots",        featured: false, verified: true,  apiAvailable: false, description: "Quora's platform to access multiple AI models including GPT-4, Claude, and more.",           website: "https://poe.com",                  tags: ["quora","multi-model","chatbot"] },
+    { name: "Pi AI",           slug: "pi-ai",             pricing: FREE,     categorySlug: "chatbots",        featured: false, verified: false, apiAvailable: false, description: "Inflection AI's personal AI designed for supportive, empathetic conversations.",             website: "https://pi.ai",                    tags: ["inflection","empathy","personal"] },
+    { name: "Character AI",    slug: "character-ai",      pricing: FREEMIUM, categorySlug: "chatbots",        featured: false, verified: true,  apiAvailable: false, description: "Chat with AI characters including celebrities, fictional personas, and custom bots.",         website: "https://character.ai",             tags: ["roleplay","characters","entertainment"] },
+    { name: "YouChat",         slug: "youchat",           pricing: FREEMIUM, categorySlug: "chatbots",        featured: false, verified: false, apiAvailable: false, description: "You.com's AI chat assistant with real-time web search and citation support.",                 website: "https://you.com",                  tags: ["search","web","citations"] },
+    { name: "Jasper Chat",     slug: "jasper-chat",       pricing: PAID,     categorySlug: "chatbots",        featured: false, verified: true,  apiAvailable: true,  description: "Jasper's AI chat interface built specifically for marketing teams and content creators.",      website: "https://jasper.ai",                tags: ["marketing","content","copywriting"] },
+    { name: "HuggingChat",     slug: "huggingchat",       pricing: FREE,     categorySlug: "chatbots",        featured: false, verified: true,  apiAvailable: true,  description: "Hugging Face's open-source chat interface powered by community-hosted models.",              website: "https://huggingface.co/chat",      tags: ["open-source","huggingface","community"] },
+    { name: "Meta AI",         slug: "meta-ai",           pricing: FREE,     categorySlug: "chatbots",        featured: false, verified: true,  apiAvailable: false, description: "Meta's AI assistant integrated into WhatsApp, Instagram, Messenger, and Facebook.",          website: "https://ai.meta.com",              tags: ["meta","whatsapp","instagram","social"] },
+    { name: "Replika",         slug: "replika",           pricing: FREEMIUM, categorySlug: "chatbots",        featured: false, verified: false, apiAvailable: false, description: "AI companion app designed for meaningful, emotionally supportive conversations.",             website: "https://replika.com",              tags: ["companion","mental-health","personal"] },
+    { name: "Forefront AI",    slug: "forefront-ai",      pricing: FREEMIUM, categorySlug: "chatbots",        featured: false, verified: false, apiAvailable: true,  description: "Multi-model AI chat interface with custom personas and internet browsing.",                   website: "https://forefront.ai",             tags: ["multi-model","personas","browsing"] },
+    { name: "ChatSonic",       slug: "chatsonic",         pricing: PAID,     categorySlug: "chatbots",        featured: false, verified: false, apiAvailable: true,  description: "Writesonic's AI chatbot with real-time Google search, voice input, and image generation.",    website: "https://writesonic.com/chat",      tags: ["writesonic","search","voice"] },
+    { name: "Kimi AI",         slug: "kimi-ai",           pricing: FREE,     categorySlug: "chatbots",        featured: false, verified: false, apiAvailable: false, description: "Moonshot AI's assistant with an exceptionally long context window for document analysis.",    website: "https://kimi.moonshot.cn",         tags: ["long-context","documents","moonshot"] },
+    { name: "Phind",           slug: "phind",             pricing: FREEMIUM, categorySlug: "chatbots",        featured: false, verified: true,  apiAvailable: false, description: "AI search engine built for developers with code-focused answers and instant examples.",       website: "https://phind.com",                tags: ["developers","search","coding"] },
+
+    // ── 2. Coding Tools ───────────────────────────────────────
+    { name: "Cursor",          slug: "cursor",            pricing: FREEMIUM, categorySlug: "coding",          featured: true,  verified: true,  apiAvailable: false, description: "AI-first code editor built on VS Code with GPT-4 integrated for chat, edit, and debug.",    website: "https://cursor.sh",                tags: ["editor","vscode","gpt4","autocomplete"] },
+    { name: "GitHub Copilot",  slug: "github-copilot",   pricing: PAID,     categorySlug: "coding",          featured: true,  verified: true,  apiAvailable: false, description: "AI pair programmer by GitHub that suggests code completions in your editor.",                  website: "https://github.com/features/copilot", tags: ["github","vscode","autocomplete","microsoft"] },
+    { name: "Replit AI",       slug: "replit-ai",         pricing: FREEMIUM, categorySlug: "coding",          featured: false, verified: true,  apiAvailable: false, description: "AI coding assistant built into Replit's browser-based IDE with code generation and debug.",   website: "https://replit.com",               tags: ["browser","ide","beginner","collaboration"] },
+    { name: "Codeium",         slug: "codeium",           pricing: FREE,     categorySlug: "coding",          featured: false, verified: true,  apiAvailable: false, description: "Free AI code completion and chat tool supporting 70+ languages and 40+ editors.",              website: "https://codeium.com",              tags: ["free","autocomplete","multi-language"] },
+    { name: "Tabnine",         slug: "tabnine",           pricing: FREEMIUM, categorySlug: "coding",          featured: false, verified: true,  apiAvailable: false, description: "AI code completion assistant that learns from your codebase for private, context-aware suggestions.", website: "https://tabnine.com",          tags: ["autocomplete","privacy","team"] },
+    { name: "Amazon CodeWhisperer", slug: "amazon-codewhisperer", pricing: FREEMIUM, categorySlug: "coding", featured: false, verified: true,  apiAvailable: false, description: "Amazon's AI coding companion with security scanning and AWS service integration.",             website: "https://aws.amazon.com/codewhisperer", tags: ["amazon","aws","security","autocomplete"] },
+    { name: "Blackbox AI",     slug: "blackbox-ai",       pricing: FREEMIUM, categorySlug: "coding",          featured: false, verified: false, apiAvailable: false, description: "AI coding assistant for code generation, search, and auto-completion in any editor.",         website: "https://blackbox.ai",              tags: ["search","generation","autocomplete"] },
+    { name: "Sourcegraph Cody", slug: "sourcegraph-cody", pricing: FREEMIUM, categorySlug: "coding",         featured: false, verified: true,  apiAvailable: false, description: "AI coding assistant with deep codebase context awareness and multi-repo search.",              website: "https://sourcegraph.com/cody",     tags: ["codebase","search","enterprise"] },
+    { name: "Mutable AI",      slug: "mutable-ai",        pricing: PAID,     categorySlug: "coding",          featured: false, verified: false, apiAvailable: false, description: "AI-accelerated software development with auto-documentation and codebase chat.",               website: "https://mutable.ai",               tags: ["documentation","refactor","codebase"] },
+    { name: "AskCodi",         slug: "askcodi",           pricing: PAID,     categorySlug: "coding",          featured: false, verified: false, apiAvailable: false, description: "AI code assistant providing explanations, unit tests, and code generation across IDEs.",        website: "https://askcodi.com",              tags: ["explanation","unit-tests","ide"] },
+    { name: "Codiga",          slug: "codiga",            pricing: FREE,     categorySlug: "coding",          featured: false, verified: false, apiAvailable: false, description: "AI code assistant with real-time analysis, smart code snippets, and security checks.",          website: "https://codiga.io",                tags: ["snippets","security","analysis"] },
+    { name: "Continue.dev",    slug: "continue-dev",      pricing: FREE,     categorySlug: "coding",          featured: false, verified: true,  apiAvailable: false, description: "Open-source AI code assistant that connects any LLM to VS Code and JetBrains.",               website: "https://continue.dev",             tags: ["open-source","vscode","jetbrains"] },
+    { name: "Pieces AI",       slug: "pieces-ai",         pricing: FREE,     categorySlug: "coding",          featured: false, verified: false, apiAvailable: false, description: "AI-powered developer tool for saving, enriching, and reusing code snippets with context.",     website: "https://pieces.app",               tags: ["snippets","context","workflow"] },
+    { name: "Warp AI",         slug: "warp-ai",           pricing: FREEMIUM, categorySlug: "coding",          featured: false, verified: true,  apiAvailable: false, description: "AI-powered terminal with natural language command generation and built-in documentation.",      website: "https://warp.dev",                 tags: ["terminal","cli","natural-language"] },
+    { name: "Sweep AI",        slug: "sweep-ai",          pricing: PAID,     categorySlug: "coding",          featured: false, verified: false, apiAvailable: false, description: "AI junior developer that turns GitHub issues into pull requests automatically.",               website: "https://sweep.dev",                tags: ["github","pull-requests","automation"] },
+    { name: "Devin AI",        slug: "devin-ai",          pricing: PAID,     categorySlug: "coding",          featured: false, verified: true,  apiAvailable: false, description: "The world's first AI software engineer that can autonomously plan and complete dev tasks.",     website: "https://cognition.ai",             tags: ["autonomous","agent","software-engineer"] },
+    { name: "Qodo",            slug: "qodo",              pricing: FREEMIUM, categorySlug: "coding",          featured: false, verified: false, apiAvailable: false, description: "AI tool for generating tests, code review, and improving code quality in your IDE.",           website: "https://qodo.ai",                  tags: ["testing","code-review","quality"] },
+    { name: "CodeGeeX",        slug: "codegeeX",          pricing: FREE,     categorySlug: "coding",          featured: false, verified: false, apiAvailable: false, description: "Open-source multilingual code generation model supporting 20+ programming languages.",          website: "https://codegeex.cn",              tags: ["open-source","multilingual","generation"] },
+    { name: "Bito AI",         slug: "bito-ai",           pricing: FREEMIUM, categorySlug: "coding",          featured: false, verified: false, apiAvailable: false, description: "AI assistant for developers that generates code, explains complexity, and writes tests.",        website: "https://bito.ai",                  tags: ["explanation","testing","ide"] },
+
+    // ── 3. Image Generation ───────────────────────────────────
+    { name: "Midjourney",      slug: "midjourney",        pricing: PAID,     categorySlug: "image-generation", featured: true, verified: true,  apiAvailable: false, description: "AI art generator creating stunning high-quality images from text prompts via Discord.",       website: "https://midjourney.com",           tags: ["art","discord","creative","photography"] },
+    { name: "DALL·E",          slug: "dalle",             pricing: FREEMIUM, categorySlug: "image-generation", featured: true, verified: true,  apiAvailable: true,  description: "OpenAI's image generation model integrated into ChatGPT with photorealistic outputs.",         website: "https://openai.com/dall-e-3",     tags: ["openai","photorealistic","generation"] },
+    { name: "Stable Diffusion", slug: "stable-diffusion", pricing: FREE,    categorySlug: "image-generation", featured: true, verified: true,  apiAvailable: true,  description: "Powerful open-source image generation model you can run locally or via APIs.",               website: "https://stability.ai",             tags: ["open-source","local","community"] },
+    { name: "Leonardo AI",     slug: "leonardo-ai",       pricing: FREEMIUM, categorySlug: "image-generation", featured: true, verified: true,  apiAvailable: true,  description: "AI image generation platform with fine-tuned models for games, art, and design assets.",      website: "https://leonardo.ai",              tags: ["game-assets","design","fine-tuned"] },
+    { name: "Adobe Firefly",   slug: "adobe-firefly",     pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: true, apiAvailable: true,  description: "Adobe's generative AI for images and text effects, trained on licensed Adobe Stock content.", website: "https://firefly.adobe.com",        tags: ["adobe","commercial-safe","licensed"] },
+    { name: "Ideogram",        slug: "ideogram",          pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: true, apiAvailable: false, description: "AI image generator with superior text rendering inside images for logos and posters.",          website: "https://ideogram.ai",              tags: ["text-in-image","logo","poster"] },
+    { name: "Canva AI",        slug: "canva-ai",          pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: true, apiAvailable: false, description: "AI design and image generation tools built into Canva's popular graphic design platform.",     website: "https://canva.com",                tags: ["design","templates","marketing"] },
+    { name: "DreamStudio",     slug: "dreamstudio",       pricing: PAID,     categorySlug: "image-generation", featured: false, verified: true, apiAvailable: true,  description: "Stability AI's official web interface for Stable Diffusion with advanced controls.",            website: "https://dreamstudio.ai",           tags: ["stability","advanced","api"] },
+    { name: "Playground AI",   slug: "playground-ai",     pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "Free image generation platform with creative filters and community sharing features.",         website: "https://playground.com",           tags: ["free","community","creative"] },
+    { name: "Craiyon",         slug: "craiyon",           pricing: FREE,     categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "Free AI image generator formerly known as DALL·E mini — simple and beginner-friendly.",       website: "https://craiyon.com",              tags: ["free","beginner","simple"] },
+    { name: "NightCafe",       slug: "nightcafe",         pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "AI art generation platform with multiple algorithms and an active creator community.",          website: "https://nightcafe.studio",         tags: ["community","art","algorithms"] },
+    { name: "Flux AI",         slug: "flux-ai",           pricing: FREE,     categorySlug: "image-generation", featured: false, verified: false, apiAvailable: true,  description: "Black Forest Labs' high-quality open-source image generation model with sharp detail.",        website: "https://blackforestlabs.ai",       tags: ["open-source","quality","detail"] },
+    { name: "Artbreeder",      slug: "artbreeder",        pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "Collaborative AI art tool for blending and evolving images using generative models.",           website: "https://artbreeder.com",           tags: ["collaborative","blending","creative"] },
+    { name: "DeepAI",          slug: "deepai",            pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: false, apiAvailable: true,  description: "AI image generation API and tools for text-to-image, upscaling, and colorization.",            website: "https://deepai.org",               tags: ["api","upscaling","colorization"] },
+    { name: "Fotor AI",        slug: "fotor-ai",          pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "Online photo editor with AI tools for image generation, background removal, and enhancement.",  website: "https://fotor.com",                tags: ["photo-editor","enhancement","background-removal"] },
+    { name: "Pixlr AI",        slug: "pixlr-ai",          pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "AI-powered online photo editor with generation, cutout, and retouching tools.",                website: "https://pixlr.com",                tags: ["photo-editor","retouching","cutout"] },
+    { name: "Mage Space",      slug: "mage-space",        pricing: FREE,     categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "Fast, free, and uncensored Stable Diffusion image generator with multiple model support.",      website: "https://mage.space",               tags: ["stable-diffusion","fast","free"] },
+    { name: "Lexica",          slug: "lexica",            pricing: FREE,     categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "Stable Diffusion search engine and image generator with a massive community gallery.",           website: "https://lexica.art",               tags: ["search","gallery","stable-diffusion"] },
+    { name: "Imagine AI",      slug: "imagine-ai",        pricing: PAID,     categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "AI image generator with custom style training for personal or brand aesthetics.",               website: "https://imagine.art",              tags: ["custom-style","brand","training"] },
+    { name: "StarryAI",        slug: "starryai",          pricing: FREEMIUM, categorySlug: "image-generation", featured: false, verified: false, apiAvailable: false, description: "Mobile-first AI art generator giving users full ownership of their generated artworks.",         website: "https://starryai.com",             tags: ["mobile","ownership","art"] },
+
+    // ── 4. Video Generation ───────────────────────────────────
+    { name: "Runway ML",       slug: "runway-ml",         pricing: FREEMIUM, categorySlug: "video",            featured: true,  verified: true,  apiAvailable: true,  description: "Professional AI video generation and editing suite with text-to-video and inpainting.",       website: "https://runwayml.com",             tags: ["text-to-video","inpainting","professional"] },
+    { name: "Pika Labs",       slug: "pika-labs",         pricing: FREEMIUM, categorySlug: "video",            featured: true,  verified: true,  apiAvailable: false, description: "AI video creation platform turning text or images into cinematic video clips.",                 website: "https://pika.art",                 tags: ["text-to-video","cinematic","clips"] },
+    { name: "Kling AI",        slug: "kling-ai",          pricing: FREEMIUM, categorySlug: "video",            featured: false, verified: true,  apiAvailable: false, description: "Kuaishou's AI video generator producing realistic motion from text and image prompts.",          website: "https://klingai.com",              tags: ["realistic","motion","kuaishou"] },
+    { name: "Synthesia",       slug: "synthesia",         pricing: PAID,     categorySlug: "video",            featured: true,  verified: true,  apiAvailable: true,  description: "AI video platform creating professional videos with digital avatars and voiceovers at scale.",    website: "https://synthesia.io",             tags: ["avatars","voiceover","corporate"] },
+    { name: "HeyGen",          slug: "heygen",            pricing: PAID,     categorySlug: "video",            featured: false, verified: true,  apiAvailable: true,  description: "AI video generator with realistic avatars and voice cloning for personalized video at scale.",   website: "https://heygen.com",               tags: ["avatars","voice-cloning","personalized"] },
+    { name: "InVideo AI",      slug: "invideo-ai",        pricing: FREEMIUM, categorySlug: "video",            featured: false, verified: true,  apiAvailable: false, description: "AI-powered video maker that turns scripts or topics into polished social media videos.",         website: "https://invideo.io",               tags: ["social-media","templates","marketing"] },
+    { name: "Veed.io AI",      slug: "veed-io",           pricing: FREEMIUM, categorySlug: "video",            featured: false, verified: true,  apiAvailable: false, description: "Online video editor with AI subtitles, translation, avatars, and audio tools built in.",        website: "https://veed.io",                  tags: ["subtitles","translation","editing"] },
+    { name: "Descript",        slug: "descript",          pricing: FREEMIUM, categorySlug: "video",            featured: false, verified: true,  apiAvailable: false, description: "Edit video like a document — AI-powered transcription, overdub, and studio sound.",             website: "https://descript.com",             tags: ["transcription","overdub","podcast"] },
+    { name: "CapCut AI",       slug: "capcut-ai",         pricing: FREE,     categorySlug: "video",            featured: false, verified: true,  apiAvailable: false, description: "Popular mobile and desktop video editor with AI background removal, effects, and CapCut templates.", website: "https://capcut.com",            tags: ["mobile","social","effects","free"] },
+    { name: "Opus Clip",       slug: "opus-clip",         pricing: FREEMIUM, categorySlug: "video",            featured: false, verified: true,  apiAvailable: false, description: "AI video repurposing tool that auto-clips long videos into viral short-form content.",           website: "https://opus.pro",                 tags: ["shorts","repurpose","clips","social"] },
+    { name: "Wisecut",         slug: "wisecut",           pricing: FREEMIUM, categorySlug: "video",            featured: false, verified: false, apiAvailable: false, description: "Automated video editing using AI to remove silences, add subtitles, and reframe shots.",          website: "https://wisecut.video",            tags: ["auto-edit","silences","subtitles"] },
+    { name: "Luma AI",         slug: "luma-ai",           pricing: FREEMIUM, categorySlug: "video",            featured: false, verified: true,  apiAvailable: true,  description: "AI 3D capture and video generation platform with Dream Machine for text-to-video.",             website: "https://lumalabs.ai",              tags: ["3d","dream-machine","generation"] },
+    { name: "Elai.io",         slug: "elai-io",           pricing: PAID,     categorySlug: "video",            featured: false, verified: false, apiAvailable: true,  description: "AI video generation platform for creating training and explainer videos from text.",             website: "https://elai.io",                  tags: ["training","explainer","avatars"] },
+    { name: "Colossyan",       slug: "colossyan",         pricing: PAID,     categorySlug: "video",            featured: false, verified: false, apiAvailable: false, description: "AI video platform for L&D teams with realistic avatar presenters and SCORM export.",             website: "https://colossyan.com",            tags: ["learning","avatars","corporate"] },
+    { name: "Kaiber",          slug: "kaiber",            pricing: PAID,     categorySlug: "video",            featured: false, verified: false, apiAvailable: false, description: "AI video generation platform for artists creating stylized music videos and animations.",         website: "https://kaiber.ai",                tags: ["music-video","animation","art"] },
+    { name: "Animoto AI",      slug: "animoto-ai",        pricing: FREEMIUM, categorySlug: "video",            featured: false, verified: false, apiAvailable: false, description: "Drag-and-drop AI video maker with templates for marketing, social, and business videos.",         website: "https://animoto.com",              tags: ["templates","marketing","drag-and-drop"] },
+    { name: "Vidnoz AI",       slug: "vidnoz-ai",         pricing: FREE,     categorySlug: "video",            featured: false, verified: false, apiAvailable: false, description: "Free AI video generator with 800+ templates and talking avatar technology.",                     website: "https://vidnoz.com",               tags: ["free","templates","avatars"] },
+    { name: "Peech AI",        slug: "peech-ai",          pricing: PAID,     categorySlug: "video",            featured: false, verified: false, apiAvailable: false, description: "AI video platform for content teams to repurpose long-form content into branded videos.",        website: "https://peech-ai.com",             tags: ["repurpose","branded","content-team"] },
+    { name: "Hour One",        slug: "hour-one",          pricing: PAID,     categorySlug: "video",            featured: false, verified: false, apiAvailable: false, description: "Enterprise AI video platform converting text to human-presenter videos at scale.",               website: "https://hourone.ai",               tags: ["enterprise","presenter","scale"] },
+    { name: "DeepBrain AI",    slug: "deepbrain-ai",      pricing: PAID,     categorySlug: "video",            featured: false, verified: false, apiAvailable: false, description: "AI video synthesis platform creating hyper-realistic digital humans for video content.",          website: "https://deepbrain.io",             tags: ["digital-human","realistic","enterprise"] },
+
+    // ── 5. Writing Tools ──────────────────────────────────────
+    { name: "Jasper AI",       slug: "jasper-ai",         pricing: PAID,     categorySlug: "writing",          featured: true,  verified: true,  apiAvailable: true,  description: "AI writing assistant designed for marketing teams to create on-brand content at speed.",        website: "https://jasper.ai",                tags: ["marketing","brand","content"] },
+    { name: "Copy.ai",         slug: "copy-ai",           pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: true,  apiAvailable: true,  description: "AI copywriting tool for creating marketing copy, blog posts, and social media content fast.",    website: "https://copy.ai",                  tags: ["copywriting","marketing","social"] },
+    { name: "Writesonic",      slug: "writesonic",        pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: true,  apiAvailable: true,  description: "AI writing platform for blog posts, ads, landing pages, and SEO-optimized content.",            website: "https://writesonic.com",           tags: ["blog","ads","seo","landing-page"] },
+    { name: "Rytr",            slug: "rytr",              pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: true,  apiAvailable: true,  description: "Affordable AI writing assistant with 40+ use cases and 30+ languages supported.",               website: "https://rytr.me",                  tags: ["affordable","multilingual","use-cases"] },
+    { name: "Grammarly AI",    slug: "grammarly-ai",      pricing: FREEMIUM, categorySlug: "writing",          featured: true,  verified: true,  apiAvailable: false, description: "AI writing assistant checking grammar, tone, clarity, and style across all platforms.",          website: "https://grammarly.com",            tags: ["grammar","tone","proofreading"] },
+    { name: "QuillBot",        slug: "quillbot",          pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: true,  apiAvailable: false, description: "AI paraphrasing tool with summarizer, grammar checker, and citation generator.",                 website: "https://quillbot.com",             tags: ["paraphrasing","summary","citation"] },
+    { name: "Sudowrite",       slug: "sudowrite",         pricing: PAID,     categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "AI writing tool purpose-built for fiction writers and creative storytelling.",                    website: "https://sudowrite.com",            tags: ["fiction","creative","storytelling"] },
+    { name: "Wordtune",        slug: "wordtune",          pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: true,  apiAvailable: false, description: "AI writing companion that rephrases and rewrites sentences for clarity and tone.",               website: "https://wordtune.com",             tags: ["rephrase","rewrite","clarity"] },
+    { name: "Anyword",         slug: "anyword",           pricing: PAID,     categorySlug: "writing",          featured: false, verified: false, apiAvailable: true,  description: "Predictive AI copywriting platform with performance scoring for ads and email.",                  website: "https://anyword.com",              tags: ["ads","email","performance-score"] },
+    { name: "HyperWrite",      slug: "hyperwrite",        pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "Personal AI writing assistant with autocomplete, templates, and document generation.",           website: "https://hyperwriteai.com",         tags: ["autocomplete","templates","personal"] },
+    { name: "Simplified AI",   slug: "simplified-ai",     pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "All-in-one content creation platform with AI writing, design, video, and social tools.",          website: "https://simplified.com",           tags: ["all-in-one","design","social"] },
+    { name: "Notion AI",       slug: "notion-ai",         pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: true,  apiAvailable: false, description: "AI writing and summarization assistant natively integrated into Notion workspaces.",              website: "https://notion.so/product/ai",     tags: ["notion","notes","summary"] },
+    { name: "Scalenut",        slug: "scalenut",          pricing: PAID,     categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "AI content research and writing platform with SEO-optimized long-form article generation.",        website: "https://scalenut.com",             tags: ["seo","long-form","research"] },
+    { name: "Frase",           slug: "frase",             pricing: PAID,     categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "AI content tool that researches, outlines, and writes SEO-optimized articles for you.",           website: "https://frase.io",                 tags: ["seo","research","outline"] },
+    { name: "TextCortex",      slug: "textcortex",        pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "AI writing assistant with knowledge base integration and rewriting tools.",                       website: "https://textcortex.com",           tags: ["knowledge-base","rewrite","assistant"] },
+    { name: "AISEO",           slug: "aiseo",             pricing: PAID,     categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "AI writing and SEO content optimization tool with plagiarism-free article generation.",           website: "https://aiseo.ai",                 tags: ["seo","plagiarism-free","optimization"] },
+    { name: "ParagraphAI",     slug: "paragraphai",       pricing: FREEMIUM, categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "AI writing app for emails, messages, and professional content on any device.",                  website: "https://paragraphai.com",          tags: ["email","professional","mobile"] },
+    { name: "ClosersCopy",     slug: "closerscopy",       pricing: PAID,     categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "Long-form AI writing platform with built-in sales frameworks and SEO tools.",                     website: "https://closerscopy.com",          tags: ["sales","frameworks","long-form"] },
+    { name: "Peppertype",      slug: "peppertype",        pricing: PAID,     categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "AI content generation platform for marketing teams with 100+ content types.",                    website: "https://peppertype.ai",            tags: ["marketing","content-types","team"] },
+    { name: "Ink AI",          slug: "ink-ai",            pricing: PAID,     categorySlug: "writing",          featured: false, verified: false, apiAvailable: false, description: "SEO-focused AI writer with content score prediction and keyword optimization.",                   website: "https://inkforall.com",            tags: ["seo","keyword","score"] },
+
+    // ── 6. Presentation Tools ─────────────────────────────────
+    { name: "Gamma",           slug: "gamma",             pricing: FREEMIUM, categorySlug: "presentations",    featured: true,  verified: true,  apiAvailable: false, description: "AI presentation builder that generates beautiful, shareable decks from a text prompt.",         website: "https://gamma.app",                tags: ["design","decks","shareable"] },
+    { name: "Tome",            slug: "tome",              pricing: FREEMIUM, categorySlug: "presentations",    featured: false, verified: true,  apiAvailable: false, description: "AI-powered storytelling format for narratives, pitches, and business presentations.",            website: "https://tome.app",                 tags: ["storytelling","pitch","business"] },
+    { name: "Beautiful.ai",    slug: "beautiful-ai",      pricing: PAID,     categorySlug: "presentations",    featured: false, verified: true,  apiAvailable: false, description: "Smart slide software that auto-designs and updates layouts as you add content.",                  website: "https://beautiful.ai",             tags: ["smart-slides","auto-design","team"] },
+    { name: "Canva Presentations", slug: "canva-presentations", pricing: FREEMIUM, categorySlug: "presentations", featured: false, verified: true, apiAvailable: false, description: "Create stunning presentations using Canva's AI-assisted design templates and tools.",       website: "https://canva.com/presentations",  tags: ["templates","design","social"] },
+    { name: "Pitch AI",        slug: "pitch-ai",          pricing: FREEMIUM, categorySlug: "presentations",    featured: false, verified: true,  apiAvailable: false, description: "Collaborative presentation tool with AI slide generation and team workflows.",                    website: "https://pitch.com",                tags: ["collaborative","team","decks"] },
+    { name: "SlidesAI",        slug: "slidesai",          pricing: FREEMIUM, categorySlug: "presentations",    featured: false, verified: false, apiAvailable: false, description: "AI tool that converts any text into a professional Google Slides presentation.",                 website: "https://slidesai.io",              tags: ["google-slides","text-to-slides","quick"] },
+    { name: "Decktopus",       slug: "decktopus",         pricing: FREEMIUM, categorySlug: "presentations",    featured: false, verified: false, apiAvailable: false, description: "AI presentation builder with smart templates and interactive content blocks.",                   website: "https://decktopus.com",            tags: ["templates","interactive","smart"] },
+    { name: "PopAI",           slug: "popai",             pricing: FREEMIUM, categorySlug: "presentations",    featured: false, verified: false, apiAvailable: false, description: "AI workspace with instant presentation generation, PDF reading, and mind mapping.",              website: "https://popai.pro",                tags: ["mind-map","pdf","workspace"] },
+    { name: "Prezi AI",        slug: "prezi-ai",          pricing: PAID,     categorySlug: "presentations",    featured: false, verified: true,  apiAvailable: false, description: "Dynamic non-linear presentation tool with AI content generation and zoom storytelling.",         website: "https://prezi.com",                tags: ["non-linear","zoom","dynamic"] },
+    { name: "Slidebean",       slug: "slidebean",         pricing: PAID,     categorySlug: "presentations",    featured: false, verified: false, apiAvailable: false, description: "AI-powered pitch deck creator used by 100k+ startups to raise funding.",                         website: "https://slidebean.com",            tags: ["pitch-deck","startup","funding"] },
+    { name: "MagicSlides",     slug: "magicslides",       pricing: FREEMIUM, categorySlug: "presentations",    featured: false, verified: false, apiAvailable: false, description: "AI plugin that creates Google Slides or PowerPoint presentations from any topic instantly.",     website: "https://magicslides.app",          tags: ["google-slides","powerpoint","plugin"] },
+    { name: "Storydoc",        slug: "storydoc",          pricing: PAID,     categorySlug: "presentations",    featured: false, verified: false, apiAvailable: false, description: "Interactive presentation builder replacing static PDFs with engaging web-based content.",         website: "https://storydoc.com",             tags: ["interactive","web","engagement"] },
+    { name: "Plus AI",         slug: "plus-ai",           pricing: PAID,     categorySlug: "presentations",    featured: false, verified: false, apiAvailable: false, description: "AI slide generator that works directly inside Google Slides and PowerPoint.",                    website: "https://plusdocs.com",             tags: ["google-slides","powerpoint","addon"] },
+    { name: "Visme AI",        slug: "visme-ai",          pricing: FREEMIUM, categorySlug: "presentations",    featured: false, verified: false, apiAvailable: false, description: "Visual communication platform with AI tools for presentations, infographics, and reports.",      website: "https://visme.co",                 tags: ["infographic","report","visual"] },
+
+    // ── 7. Voice & Audio Tools ────────────────────────────────
+    { name: "ElevenLabs",      slug: "elevenlabs",        pricing: FREEMIUM, categorySlug: "audio",            featured: true,  verified: true,  apiAvailable: true,  description: "Best-in-class AI voice synthesis and voice cloning for any language and use case.",            website: "https://elevenlabs.io",            tags: ["voice-cloning","tts","multilingual"] },
+    { name: "Murf AI",         slug: "murf-ai",           pricing: PAID,     categorySlug: "audio",            featured: false, verified: true,  apiAvailable: true,  description: "Studio-quality AI voice generator with 120+ voices for voiceovers and presentations.",          website: "https://murf.ai",                  tags: ["voiceover","studio","120-voices"] },
+    { name: "PlayHT",          slug: "playht",            pricing: FREEMIUM, categorySlug: "audio",            featured: false, verified: true,  apiAvailable: true,  description: "AI text-to-speech platform with 900+ ultra-realistic voices and voice cloning.",               website: "https://play.ht",                  tags: ["tts","900-voices","cloning"] },
+    { name: "Resemble AI",     slug: "resemble-ai",       pricing: PAID,     categorySlug: "audio",            featured: false, verified: false, apiAvailable: true,  description: "Enterprise voice AI platform for cloning, generating, and localizing voices at scale.",         website: "https://resemble.ai",              tags: ["enterprise","cloning","localization"] },
+    { name: "Speechify",       slug: "speechify",         pricing: FREEMIUM, categorySlug: "audio",            featured: false, verified: true,  apiAvailable: false, description: "AI text-to-speech reader that converts any document into audio at up to 4.5x speed.",           website: "https://speechify.com",            tags: ["reader","accessibility","speed"] },
+    { name: "LOVO AI",         slug: "lovo-ai",           pricing: FREEMIUM, categorySlug: "audio",            featured: false, verified: false, apiAvailable: true,  description: "AI voice generator and video editor with 500+ voices across 100 languages.",                   website: "https://lovo.ai",                  tags: ["500-voices","100-languages","video"] },
+    { name: "WellSaid Labs",   slug: "wellsaid-labs",     pricing: PAID,     categorySlug: "audio",            featured: false, verified: true,  apiAvailable: true,  description: "Enterprise AI voice creation platform trusted by Fortune 500 teams for professional audio.",    website: "https://wellsaidlabs.com",         tags: ["enterprise","professional","fortune500"] },
+    { name: "Voicemod AI",     slug: "voicemod-ai",       pricing: FREE,     categorySlug: "audio",            featured: false, verified: true,  apiAvailable: false, description: "Real-time AI voice changer for gaming, streaming, and online communication.",                   website: "https://voicemod.net",             tags: ["real-time","gaming","streaming"] },
+    { name: "Krisp AI",        slug: "krisp-ai",          pricing: FREEMIUM, categorySlug: "audio",            featured: false, verified: true,  apiAvailable: false, description: "AI noise cancellation app that removes background noise and echo from any call.",               website: "https://krisp.ai",                 tags: ["noise-cancellation","calls","meetings"] },
+    { name: "Podcastle",       slug: "podcastle",         pricing: FREEMIUM, categorySlug: "audio",            featured: false, verified: false, apiAvailable: false, description: "AI-powered podcast creation platform with recording, editing, and transcription tools.",         website: "https://podcastle.ai",             tags: ["podcast","recording","transcription"] },
+    { name: "Listnr AI",       slug: "listnr-ai",         pricing: FREEMIUM, categorySlug: "audio",            featured: false, verified: false, apiAvailable: true,  description: "AI text-to-speech tool for creating voiceovers and embedding audio players in content.",         website: "https://listnr.ai",                tags: ["tts","voiceover","embed"] },
+    { name: "Cleanvoice AI",   slug: "cleanvoice-ai",     pricing: PAID,     categorySlug: "audio",            featured: false, verified: false, apiAvailable: false, description: "AI that removes filler words, stutters, and background noise from podcast recordings.",          website: "https://cleanvoice.ai",            tags: ["podcast","filler-words","cleanup"] },
+    { name: "NaturalReader",   slug: "naturalreader",     pricing: FREEMIUM, categorySlug: "audio",            featured: false, verified: false, apiAvailable: false, description: "AI text-to-speech software for personal use, education, and accessibility needs.",               website: "https://naturalreaders.com",        tags: ["accessibility","education","tts"] },
+    { name: "FakeYou",         slug: "fakeyou",           pricing: FREE,     categorySlug: "audio",            featured: false, verified: false, apiAvailable: false, description: "Celebrity and character voice text-to-speech using community-trained deep fake models.",          website: "https://fakeyou.com",              tags: ["celebrity","character","deepfake"] },
+    { name: "Voice.ai",        slug: "voice-ai",          pricing: FREE,     categorySlug: "audio",            featured: false, verified: false, apiAvailable: false, description: "Free real-time AI voice changer with a marketplace of community-created voice filters.",         website: "https://voice.ai",                 tags: ["real-time","free","marketplace"] },
+    { name: "Coqui AI",        slug: "coqui-ai",          pricing: FREE,     categorySlug: "audio",            featured: false, verified: false, apiAvailable: true,  description: "Open-source TTS toolkit for training, fine-tuning, and deploying custom voice models.",          website: "https://coqui.ai",                 tags: ["open-source","custom","fine-tuning"] },
+    { name: "TTSMaker",        slug: "ttsmaker",          pricing: FREE,     categorySlug: "audio",            featured: false, verified: false, apiAvailable: false, description: "Free online text-to-speech tool supporting 50+ languages with no account required.",             website: "https://ttsmaker.com",             tags: ["free","50-languages","no-signup"] },
+    { name: "Replica Studios",  slug: "replica-studios",  pricing: PAID,     categorySlug: "audio",            featured: false, verified: false, apiAvailable: true,  description: "AI voice acting platform for games and interactive media with emotional voice performance.",     website: "https://replicastudios.com",       tags: ["game","voice-acting","emotional"] },
+    { name: "Altered Studio",   slug: "altered-studio",   pricing: PAID,     categorySlug: "audio",            featured: false, verified: false, apiAvailable: false, description: "Professional AI voice changer for changing your voice in real time or post-production.",         website: "https://altered.ai",               tags: ["professional","post-production","real-time"] },
+
+    // ── 8. Music Generation ───────────────────────────────────
+    { name: "Suno",            slug: "suno",              pricing: FREEMIUM, categorySlug: "music",            featured: true,  verified: true,  apiAvailable: false, description: "AI music generator creating full songs with vocals, instruments, and lyrics from a prompt.",    website: "https://suno.ai",                  tags: ["full-song","vocals","lyrics"] },
+    { name: "Udio",            slug: "udio",              pricing: FREEMIUM, categorySlug: "music",            featured: true,  verified: true,  apiAvailable: false, description: "AI music creation platform generating high-quality, diverse music across all genres.",          website: "https://udio.com",                 tags: ["genres","quality","diverse"] },
+    { name: "AIVA",            slug: "aiva",              pricing: FREEMIUM, categorySlug: "music",            featured: false, verified: true,  apiAvailable: false, description: "AI music composer specializing in emotional, cinematic orchestral soundtracks.",                website: "https://aiva.ai",                  tags: ["orchestral","cinematic","composer"] },
+    { name: "Boomy",           slug: "boomy",             pricing: FREEMIUM, categorySlug: "music",            featured: false, verified: true,  apiAvailable: false, description: "Create original songs in seconds and submit them to streaming platforms to earn royalties.",     website: "https://boomy.com",                tags: ["royalties","streaming","original"] },
+    { name: "Soundraw",        slug: "soundraw",          pricing: PAID,     categorySlug: "music",            featured: false, verified: true,  apiAvailable: false, description: "AI music generation tool for creators needing royalty-free custom background music.",           website: "https://soundraw.io",              tags: ["royalty-free","background","custom"] },
+    { name: "Beatoven AI",     slug: "beatoven-ai",       pricing: FREEMIUM, categorySlug: "music",            featured: false, verified: false, apiAvailable: true,  description: "AI music composer that creates unique mood-based background tracks for videos and podcasts.",    website: "https://beatoven.ai",              tags: ["mood","background","podcast"] },
+    { name: "Loudly",          slug: "loudly",            pricing: FREEMIUM, categorySlug: "music",            featured: false, verified: false, apiAvailable: false, description: "AI music platform for generating and customizing royalty-free stems for any project.",           website: "https://loudly.com",               tags: ["stems","royalty-free","customize"] },
+    { name: "Mubert",          slug: "mubert",            pricing: FREEMIUM, categorySlug: "music",            featured: false, verified: false, apiAvailable: true,  description: "AI-generated streaming music for content creators, apps, and businesses via API.",              website: "https://mubert.com",               tags: ["streaming","api","content"] },
+    { name: "Soundful",        slug: "soundful",          pricing: FREEMIUM, categorySlug: "music",            featured: false, verified: false, apiAvailable: false, description: "AI music generator creating high-quality royalty-free tracks across multiple genres.",           website: "https://soundful.com",             tags: ["royalty-free","genres","high-quality"] },
+    { name: "Musicfy",         slug: "musicfy",           pricing: FREEMIUM, categorySlug: "music",            featured: false, verified: false, apiAvailable: false, description: "AI cover song and voice-to-song platform letting you create music in any artist's style.",       website: "https://musicfy.lol",              tags: ["cover","voice-to-song","style"] },
+    { name: "Splash Pro",      slug: "splash-pro",        pricing: FREE,     categorySlug: "music",            featured: false, verified: false, apiAvailable: false, description: "Free AI music creation tool for beats and songs with simple controls for everyone.",             website: "https://splashmusic.com",          tags: ["free","beats","simple"] },
+    { name: "Stable Audio",    slug: "stable-audio",      pricing: FREEMIUM, categorySlug: "music",            featured: false, verified: true,  apiAvailable: false, description: "Stability AI's music generation model creating high-quality, long-form audio from text.",        website: "https://stability.ai/stable-audio", tags: ["stability","long-form","quality"] },
+    { name: "Brain.fm",        slug: "brain-fm",          pricing: PAID,     categorySlug: "music",            featured: false, verified: false, apiAvailable: false, description: "AI-generated functional music engineered to improve focus, relaxation, and sleep.",             website: "https://brain.fm",                 tags: ["focus","relaxation","functional"] },
+
+    // ── 9. Productivity Tools ─────────────────────────────────
+    { name: "ClickUp AI",      slug: "clickup-ai",        pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: true,  description: "Built-in AI in ClickUp for writing, summarizing, and automating project management tasks.",    website: "https://clickup.com",              tags: ["project-management","automation","summarize"] },
+    { name: "Slack AI",        slug: "slack-ai",          pricing: PAID,     categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: false, description: "AI features in Slack for thread summaries, search answers, and workflow automation.",           website: "https://slack.com/intl/en-in/ai",  tags: ["slack","summary","search","workflow"] },
+    { name: "Zoom AI",         slug: "zoom-ai",           pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: false, description: "AI Companion in Zoom for meeting summaries, smart recordings, and email drafts.",               website: "https://zoom.us/ai-assistant",     tags: ["meetings","summary","recording"] },
+    { name: "Fireflies.ai",    slug: "fireflies-ai",      pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: true,  description: "AI meeting assistant that records, transcribes, and creates action items from any meeting.",    website: "https://fireflies.ai",             tags: ["meetings","transcription","action-items"] },
+    { name: "Otter.ai",        slug: "otter-ai",          pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: true,  description: "AI meeting assistant providing real-time transcription, notes, and automated summaries.",        website: "https://otter.ai",                 tags: ["transcription","meetings","notes"] },
+    { name: "Motion",          slug: "motion",            pricing: PAID,     categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: false, description: "AI calendar and task manager that automatically schedules your day for maximum productivity.",    website: "https://usemotion.com",            tags: ["calendar","scheduling","tasks"] },
+    { name: "Mem AI",          slug: "mem-ai",            pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: false, apiAvailable: false, description: "Self-organizing AI note-taking workspace that connects your notes and surfaces insights.",       website: "https://mem.ai",                   tags: ["notes","knowledge-base","self-organizing"] },
+    { name: "Taskade",         slug: "taskade",           pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: false, apiAvailable: true,  description: "AI project management and collaboration tool with built-in agents and automation.",              website: "https://taskade.com",              tags: ["project","collaboration","agents"] },
+    { name: "Superhuman AI",   slug: "superhuman-ai",     pricing: PAID,     categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: false, description: "The fastest email client with AI auto-complete, triage, and instant reply generation.",          website: "https://superhuman.com",           tags: ["email","speed","triage"] },
+    { name: "Rewind AI",       slug: "rewind-ai",         pricing: PAID,     categorySlug: "productivity",     featured: false, verified: false, apiAvailable: false, description: "AI that records everything on your Mac and lets you search and recall any past context.",         website: "https://rewind.ai",                tags: ["memory","recall","mac"] },
+    { name: "Clockwise",       slug: "clockwise",         pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: false, apiAvailable: true,  description: "AI calendar assistant that optimizes your schedule to protect focus time for deep work.",         website: "https://getclockwise.com",         tags: ["calendar","focus","schedule"] },
+    { name: "Coda AI",         slug: "coda-ai",           pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: false, description: "AI-powered doc platform with automated workflows, tables, and built-in AI assistant.",           website: "https://coda.io",                  tags: ["docs","workflows","tables"] },
+    { name: "Airtable AI",     slug: "airtable-ai",       pricing: PAID,     categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: true,  description: "AI features in Airtable for automatic field population, summarization, and data categorization.", website: "https://airtable.com",            tags: ["database","automation","categorization"] },
+    { name: "Trello AI",       slug: "trello-ai",         pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: false, description: "AI features in Trello for card summarization, automation suggestions, and templates.",           website: "https://trello.com",               tags: ["kanban","cards","automation"] },
+    { name: "Monday AI",       slug: "monday-ai",         pricing: PAID,     categorySlug: "productivity",     featured: false, verified: true,  apiAvailable: true,  description: "AI capabilities in monday.com for automating workflows, generating content, and analysis.",      website: "https://monday.com",               tags: ["workflow","automation","analysis"] },
+    { name: "Fellow AI",       slug: "fellow-ai",         pricing: FREEMIUM, categorySlug: "productivity",     featured: false, verified: false, apiAvailable: false, description: "AI meeting management tool for agendas, real-time notes, and follow-up action items.",           website: "https://fellow.app",               tags: ["meetings","agenda","action-items"] },
+
+    // ── 10. Automation Tools ──────────────────────────────────
+    { name: "Zapier AI",       slug: "zapier-ai",         pricing: FREEMIUM, categorySlug: "automation",       featured: true,  verified: true,  apiAvailable: true,  description: "The leading automation platform connecting 6,000+ apps with AI-powered workflow building.",      website: "https://zapier.com",               tags: ["no-code","integrations","workflow"] },
+    { name: "Make.com",        slug: "make-com",          pricing: FREEMIUM, categorySlug: "automation",       featured: true,  verified: true,  apiAvailable: true,  description: "Visual workflow automation platform with advanced AI scenarios for complex automations.",         website: "https://make.com",                 tags: ["visual","scenarios","integrations"] },
+    { name: "n8n",             slug: "n8n",               pricing: FREE,     categorySlug: "automation",       featured: false, verified: true,  apiAvailable: true,  description: "Open-source workflow automation tool with 350+ integrations, self-hostable and extendable.",     website: "https://n8n.io",                   tags: ["open-source","self-hosted","integrations"] },
+    { name: "Bardeen AI",      slug: "bardeen-ai",        pricing: FREEMIUM, categorySlug: "automation",       featured: false, verified: false, apiAvailable: false, description: "AI browser automation tool for scraping data, automating tasks, and integrating apps.",          website: "https://bardeen.ai",               tags: ["browser","scraping","no-code"] },
+    { name: "AgentGPT",        slug: "agentgpt",          pricing: FREE,     categorySlug: "automation",       featured: false, verified: false, apiAvailable: false, description: "Browser-based autonomous AI agent that creates and runs task chains to achieve goals.",           website: "https://agentgpt.reworkd.ai",      tags: ["autonomous","agent","tasks"] },
+    { name: "AutoGen",         slug: "autogen",           pricing: FREE,     categorySlug: "automation",       featured: false, verified: true,  apiAvailable: true,  description: "Microsoft's open-source framework for building multi-agent AI systems and workflows.",            website: "https://microsoft.github.io/autogen", tags: ["microsoft","multi-agent","open-source"] },
+    { name: "CrewAI",          slug: "crewai",            pricing: FREE,     categorySlug: "automation",       featured: false, verified: true,  apiAvailable: true,  description: "Open-source framework for orchestrating role-playing AI agent teams for complex tasks.",          website: "https://crewai.com",               tags: ["agents","orchestration","open-source"] },
+    { name: "Gumloop",         slug: "gumloop",           pricing: FREEMIUM, categorySlug: "automation",       featured: false, verified: false, apiAvailable: false, description: "No-code AI automation builder for scraping, processing, and automating web workflows.",          website: "https://gumloop.com",              tags: ["no-code","scraping","web"] },
+    { name: "Relay.app",       slug: "relay-app",         pricing: FREEMIUM, categorySlug: "automation",       featured: false, verified: false, apiAvailable: false, description: "Collaborative workflow automation with AI steps, human-in-loop approvals, and multiplayer editing.", website: "https://relay.app",             tags: ["collaborative","human-in-loop","multiplayer"] },
+    { name: "Lindy AI",        slug: "lindy-ai",          pricing: PAID,     categorySlug: "automation",       featured: false, verified: false, apiAvailable: false, description: "AI employee platform for automating email, scheduling, CRM, and customer support tasks.",          website: "https://lindy.ai",                 tags: ["email","scheduling","crm"] },
+    { name: "UiPath",          slug: "uipath",            pricing: PAID,     categorySlug: "automation",       featured: false, verified: true,  apiAvailable: true,  description: "Enterprise RPA and AI automation platform for end-to-end business process automation.",           website: "https://uipath.com",               tags: ["rpa","enterprise","business-process"] },
+    { name: "Pipedream",       slug: "pipedream",         pricing: FREEMIUM, categorySlug: "automation",       featured: false, verified: true,  apiAvailable: true,  description: "Developer-first integration platform with serverless functions and 1000+ app connections.",       website: "https://pipedream.com",            tags: ["developers","serverless","api"] },
+    { name: "Activepieces",    slug: "activepieces",      pricing: FREE,     categorySlug: "automation",       featured: false, verified: false, apiAvailable: true,  description: "Open-source no-code automation alternative to Zapier, self-hostable with growing integrations.",  website: "https://activepieces.com",         tags: ["open-source","zapier-alternative","no-code"] },
+    { name: "IFTTT AI",        slug: "ifttt-ai",          pricing: FREEMIUM, categorySlug: "automation",       featured: false, verified: true,  apiAvailable: false, description: "Classic automation service connecting smart devices, apps, and AI services with simple rules.",    website: "https://ifttt.com",                tags: ["smart-home","simple","applets"] },
+
+    // ── 11. Research Tools ────────────────────────────────────
+    { name: "Elicit",          slug: "elicit",            pricing: FREEMIUM, categorySlug: "research",         featured: true,  verified: true,  apiAvailable: false, description: "AI research assistant finding and summarizing academic papers for literature reviews.",           website: "https://elicit.org",               tags: ["academic","papers","literature-review"] },
+    { name: "Consensus",       slug: "consensus",         pricing: FREEMIUM, categorySlug: "research",         featured: false, verified: true,  apiAvailable: false, description: "AI search engine finding consensus from scientific research papers for evidence-based answers.",   website: "https://consensus.app",            tags: ["scientific","evidence","consensus"] },
+    { name: "Scite AI",        slug: "scite-ai",          pricing: PAID,     categorySlug: "research",         featured: false, verified: true,  apiAvailable: true,  description: "Smart citation service showing how publications have been supported or contrasted.",               website: "https://scite.ai",                 tags: ["citations","publications","smart"] },
+    { name: "Semantic Scholar AI", slug: "semantic-scholar", pricing: FREE,  categorySlug: "research",         featured: false, verified: true,  apiAvailable: true,  description: "Free AI-powered research platform with 200M+ scientific papers and semantic search.",            website: "https://semanticscholar.org",      tags: ["free","200m-papers","semantic"] },
+    { name: "Research Rabbit", slug: "research-rabbit",   pricing: FREE,     categorySlug: "research",         featured: false, verified: false, apiAvailable: false, description: "Free citation-based literature mapping tool to discover related papers and authors.",             website: "https://researchrabbit.ai",        tags: ["citation","mapping","discover"] },
+    { name: "Humata AI",       slug: "humata-ai",         pricing: FREEMIUM, categorySlug: "research",         featured: false, verified: false, apiAvailable: false, description: "AI that lets you ask questions, summarize, and extract insights from PDF documents.",             website: "https://humata.ai",                tags: ["pdf","summarize","extract"] },
+    { name: "ChatPDF",         slug: "chatpdf",           pricing: FREEMIUM, categorySlug: "research",         featured: false, verified: true,  apiAvailable: false, description: "Chat with any PDF document using AI — get answers, summaries, and key points instantly.",         website: "https://chatpdf.com",              tags: ["pdf","chat","summary"] },
+    { name: "SciSpace",        slug: "scispace",          pricing: FREEMIUM, categorySlug: "research",         featured: false, verified: false, apiAvailable: false, description: "AI research tool for reading, understanding, and writing scientific papers with AI explanations.", website: "https://typeset.io",              tags: ["scientific","explain","writing"] },
+    { name: "AskYourPDF",      slug: "askyourpdf",        pricing: FREEMIUM, categorySlug: "research",         featured: false, verified: false, apiAvailable: true,  description: "AI-powered PDF reader that lets you ask questions and get citations from any document.",          website: "https://askyourpdf.com",           tags: ["pdf","citations","qa"] },
+    { name: "Storm AI",        slug: "storm-ai",          pricing: FREE,     categorySlug: "research",         featured: false, verified: false, apiAvailable: false, description: "Stanford's AI system for generating comprehensive, Wikipedia-like articles from internet research.", website: "https://storm.genie.stanford.edu", tags: ["stanford","articles","wikipedia"] },
+    { name: "PaperBrain",      slug: "paperbrain",        pricing: FREE,     categorySlug: "research",         featured: false, verified: false, apiAvailable: false, description: "Free AI tool for understanding complex academic papers with simple explanations.",                 website: "https://paperbrain.study",         tags: ["free","academic","explain"] },
+    { name: "Scholarcy",       slug: "scholarcy",         pricing: PAID,     categorySlug: "research",         featured: false, verified: false, apiAvailable: false, description: "AI flashcard and summary generator for academic articles and research papers.",                    website: "https://scholarcy.com",            tags: ["flashcards","summary","academic"] },
+    { name: "Explainpaper",    slug: "explainpaper",      pricing: FREEMIUM, categorySlug: "research",         featured: false, verified: false, apiAvailable: false, description: "Upload a paper and highlight confusing text to get AI explanations in plain language.",           website: "https://explainpaper.com",         tags: ["explain","plain-language","academic"] },
+
+    // ── 12. Website Builders ──────────────────────────────────
+    { name: "Wix AI",          slug: "wix-ai",            pricing: FREEMIUM, categorySlug: "website-builders",  featured: true, verified: true,  apiAvailable: false, description: "AI website builder that generates a complete, personalized site from a text description.",       website: "https://wix.com",                  tags: ["drag-and-drop","templates","ecommerce"] },
+    { name: "Framer AI",       slug: "framer-ai",         pricing: FREEMIUM, categorySlug: "website-builders",  featured: true, verified: true,  apiAvailable: false, description: "Design and publish production-ready websites from a single text prompt in seconds.",             website: "https://framer.com",               tags: ["design","publish","prompt-to-site"] },
+    { name: "Durable AI",      slug: "durable-ai",        pricing: PAID,     categorySlug: "website-builders",  featured: false, verified: true, apiAvailable: false, description: "AI website builder generating a complete business website in 30 seconds from your business type.", website: "https://durable.co",              tags: ["30-seconds","business","fast"] },
+    { name: "Webflow AI",      slug: "webflow-ai",        pricing: FREEMIUM, categorySlug: "website-builders",  featured: false, verified: true, apiAvailable: false, description: "Professional no-code website builder with AI content generation and CMS capabilities.",           website: "https://webflow.com",              tags: ["no-code","cms","professional"] },
+    { name: "10Web",           slug: "10web",             pricing: PAID,     categorySlug: "website-builders",  featured: false, verified: false, apiAvailable: false, description: "AI WordPress website builder with automated hosting, speed optimization, and design tools.",      website: "https://10web.io",                 tags: ["wordpress","hosting","speed"] },
+    { name: "Dorik AI",        slug: "dorik-ai",          pricing: FREEMIUM, categorySlug: "website-builders",  featured: false, verified: false, apiAvailable: false, description: "No-code AI website builder with white-label options and client management features.",             website: "https://dorik.com",                tags: ["no-code","white-label","client"] },
+    { name: "Unicorn Platform", slug: "unicorn-platform",  pricing: FREEMIUM, categorySlug: "website-builders", featured: false, verified: false, apiAvailable: false, description: "AI landing page and website builder for startups and SaaS products with no coding required.",   website: "https://unicornplatform.com",      tags: ["landing-page","startup","saas"] },
+    { name: "Mixo",            slug: "mixo",              pricing: PAID,     categorySlug: "website-builders",  featured: false, verified: false, apiAvailable: false, description: "AI website builder for launching startup ideas instantly with a built-in email waitlist.",         website: "https://mixo.io",                  tags: ["startup","waitlist","launch"] },
+    { name: "Appy Pie AI",     slug: "appy-pie-ai",       pricing: FREEMIUM, categorySlug: "website-builders",  featured: false, verified: false, apiAvailable: false, description: "No-code platform for building websites, apps, chatbots, and more using AI assistance.",          website: "https://appypie.com",              tags: ["no-code","apps","chatbots"] },
+    { name: "Hocoos AI",       slug: "hocoos-ai",         pricing: FREEMIUM, categorySlug: "website-builders",  featured: false, verified: false, apiAvailable: false, description: "AI website builder creating fully designed sites with unique content in under 2 minutes.",        website: "https://hocoos.com",               tags: ["fast","unique-content","design"] },
+
+    // ── 13. Design Tools ──────────────────────────────────────
+    { name: "Figma AI",        slug: "figma-ai",          pricing: FREEMIUM, categorySlug: "design",            featured: true, verified: true,  apiAvailable: true,  description: "AI design features in Figma for generating UI components, content, and auto-layouts.",           website: "https://figma.com",                tags: ["ui","components","collaborative"] },
+    { name: "Adobe Express AI", slug: "adobe-express-ai", pricing: FREEMIUM, categorySlug: "design",            featured: false, verified: true, apiAvailable: false, description: "AI-powered design app for creating social posts, videos, and branded content quickly.",          website: "https://express.adobe.com",        tags: ["social","branded","quick"] },
+    { name: "Khroma",          slug: "khroma",            pricing: FREE,     categorySlug: "design",            featured: false, verified: false, apiAvailable: false, description: "AI color palette generator that learns your preferences to create personalized color schemes.",     website: "https://khroma.co",                tags: ["color","palette","personalized"] },
+    { name: "Uizard",          slug: "uizard",            pricing: FREEMIUM, categorySlug: "design",            featured: false, verified: true,  apiAvailable: false, description: "AI UI design tool turning sketches, screenshots, or text into editable wireframes and mockups.",   website: "https://uizard.io",                tags: ["wireframe","mockup","sketch-to-ui"] },
+    { name: "Looka",           slug: "looka",             pricing: PAID,     categorySlug: "design",            featured: false, verified: true,  apiAvailable: false, description: "AI logo maker and brand kit generator for creating professional brand identities.",                website: "https://looka.com",                tags: ["logo","brand","identity"] },
+    { name: "Designs.ai",      slug: "designs-ai",        pricing: PAID,     categorySlug: "design",            featured: false, verified: false, apiAvailable: false, description: "AI design suite for logos, videos, mockups, and social content all in one platform.",             website: "https://designs.ai",               tags: ["logo","video","mockup","all-in-one"] },
+    { name: "AutoDraw",        slug: "autodraw",          pricing: FREE,     categorySlug: "design",            featured: false, verified: true,  apiAvailable: false, description: "Google's AI drawing tool that suggests professional drawings to match your rough sketches.",         website: "https://autodraw.com",             tags: ["google","drawing","sketches"] },
+    { name: "Visily AI",       slug: "visily-ai",         pricing: FREEMIUM, categorySlug: "design",            featured: false, verified: false, apiAvailable: false, description: "AI UI design tool with screenshot-to-wireframe and text-to-design capabilities.",                 website: "https://visily.ai",                tags: ["wireframe","screenshot","text-to-design"] },
+    { name: "Galileo AI",      slug: "galileo-ai",        pricing: PAID,     categorySlug: "design",            featured: false, verified: false, apiAvailable: false, description: "AI UI/UX design generator creating complex, editable design components from text descriptions.",   website: "https://usegalileo.ai",            tags: ["ui-ux","generation","editable"] },
+    { name: "Kittl",           slug: "kittl",             pricing: FREEMIUM, categorySlug: "design",            featured: false, verified: false, apiAvailable: false, description: "AI-powered graphic design platform for print-on-demand, merchandise, and digital assets.",         website: "https://kittl.com",                tags: ["print-on-demand","merchandise","graphics"] },
+    { name: "Flair AI",        slug: "flair-ai",          pricing: FREEMIUM, categorySlug: "design",            featured: false, verified: false, apiAvailable: false, description: "AI design tool for product photography, generating professional branded content scenes.",          website: "https://flair.ai",                 tags: ["product-photography","branded","ecommerce"] },
+    { name: "Relume AI",       slug: "relume-ai",         pricing: FREEMIUM, categorySlug: "design",            featured: false, verified: false, apiAvailable: false, description: "AI website component library and sitemap builder for Figma and Webflow projects.",                website: "https://relume.io",                tags: ["components","sitemap","figma","webflow"] },
+    { name: "Fontjoy",         slug: "fontjoy",           pricing: FREE,     categorySlug: "design",            featured: false, verified: false, apiAvailable: false, description: "AI font pairing tool that generates harmonious font combinations with a single click.",             website: "https://fontjoy.com",              tags: ["fonts","typography","pairing"] },
+    { name: "Brandmark",       slug: "brandmark",         pricing: PAID,     categorySlug: "design",            featured: false, verified: false, apiAvailable: false, description: "AI logo and brand identity generator with unique designs and full IP ownership.",                  website: "https://brandmark.io",             tags: ["logo","brand","ownership"] },
+
+    // ── 14. SEO & Marketing Tools ─────────────────────────────
+    { name: "Surfer SEO",      slug: "surfer-seo",        pricing: PAID,     categorySlug: "seo-marketing",     featured: true, verified: true,  apiAvailable: true,  description: "AI content optimization tool analyzing 500+ ranking factors to help your pages rank on Google.",  website: "https://surferseo.com",            tags: ["content","ranking","optimization"] },
+    { name: "Ahrefs AI",       slug: "ahrefs-ai",         pricing: PAID,     categorySlug: "seo-marketing",     featured: true, verified: true,  apiAvailable: false, description: "Industry-leading SEO toolkit with AI content grader, keyword research, and backlink analysis.",     website: "https://ahrefs.com",               tags: ["backlinks","keywords","audit"] },
+    { name: "Semrush AI",      slug: "semrush-ai",        pricing: PAID,     categorySlug: "seo-marketing",     featured: false, verified: true,  apiAvailable: true,  description: "All-in-one SEO and marketing platform with AI writing assistant and competitive intelligence.",     website: "https://semrush.com",              tags: ["competitive","keywords","all-in-one"] },
+    { name: "NeuronWriter",    slug: "neuronwriter",      pricing: PAID,     categorySlug: "seo-marketing",     featured: false, verified: false, apiAvailable: false, description: "AI content optimization tool using NLP and semantic analysis for top Google rankings.",             website: "https://neuronwriter.com",         tags: ["nlp","semantic","optimization"] },
+    { name: "MarketMuse",      slug: "marketmuse",        pricing: PAID,     categorySlug: "seo-marketing",     featured: false, verified: false, apiAvailable: false, description: "AI content planning and optimization platform using topic modeling for authority building.",        website: "https://marketmuse.com",           tags: ["content-planning","topic-modeling","authority"] },
+    { name: "GrowthBar",       slug: "growthbar",         pricing: PAID,     categorySlug: "seo-marketing",     featured: false, verified: false, apiAvailable: false, description: "AI SEO tool with blog post generation, keyword research, and competitor tracking.",                 website: "https://growthbarseo.com",         tags: ["blog","keywords","competitor"] },
+    { name: "Outranking",      slug: "outranking",        pricing: PAID,     categorySlug: "seo-marketing",     featured: false, verified: false, apiAvailable: false, description: "AI content writing and SEO optimization platform for teams creating data-driven content.",          website: "https://outranking.io",            tags: ["data-driven","optimization","team"] },
+    { name: "Clearscope",      slug: "clearscope",        pricing: PAID,     categorySlug: "seo-marketing",     featured: false, verified: true,  apiAvailable: false, description: "AI content optimization platform used by top SEO teams to achieve top keyword rankings.",          website: "https://clearscope.io",            tags: ["enterprise","grading","keywords"] },
+    { name: "AdCreative.ai",   slug: "adcreative-ai",     pricing: PAID,     categorySlug: "seo-marketing",     featured: false, verified: true,  apiAvailable: true,  description: "AI ad creative generator producing high-converting ads for Google, Facebook, and social media.",   website: "https://adcreative.ai",            tags: ["ads","facebook","google","creative"] },
+    { name: "Ocoya",           slug: "ocoya",             pricing: FREEMIUM, categorySlug: "seo-marketing",     featured: false, verified: false, apiAvailable: true,  description: "AI social media scheduling and content creation platform with 40+ integrations.",                  website: "https://ocoya.com",                tags: ["social","scheduling","content"] },
+    { name: "Predis AI",       slug: "predis-ai",         pricing: FREEMIUM, categorySlug: "seo-marketing",     featured: false, verified: false, apiAvailable: true,  description: "AI social media content creator generating posts, reels, and carousels from a single idea.",      website: "https://predis.ai",                tags: ["social","reels","carousel"] },
+    { name: "HubSpot AI",      slug: "hubspot-ai",        pricing: FREEMIUM, categorySlug: "seo-marketing",     featured: false, verified: true,  apiAvailable: true,  description: "AI features in HubSpot CRM for content creation, email drafts, and marketing automation.",        website: "https://hubspot.com",              tags: ["crm","email","automation"] },
+
+    // ── 15. Tools for Students ────────────────────────────────
+    { name: "Wolfram Alpha",   slug: "wolfram-alpha",     pricing: FREEMIUM, categorySlug: "students",          featured: true,  verified: true,  apiAvailable: true,  description: "Computational knowledge engine answering math, science, and factual questions with step-by-step solutions.", website: "https://wolframalpha.com",     tags: ["math","science","computation"] },
+    { name: "Quizlet AI",      slug: "quizlet-ai",        pricing: FREEMIUM, categorySlug: "students",          featured: false, verified: true,  apiAvailable: false, description: "AI-powered study platform generating flashcards, practice tests, and explanations from notes.",    website: "https://quizlet.com",              tags: ["flashcards","study","practice"] },
+    { name: "Khanmigo",        slug: "khanmigo",          pricing: PAID,     categorySlug: "students",          featured: false, verified: true,  apiAvailable: false, description: "Khan Academy's AI tutor helping students learn at their own pace with Socratic questioning.",         website: "https://khanacademy.org/khan-labs", tags: ["tutor","khan-academy","socratic"] },
+    { name: "Socratic",        slug: "socratic",          pricing: FREE,     categorySlug: "students",          featured: false, verified: true,  apiAvailable: false, description: "Google's free AI learning app explaining homework problems with visual explanations.",               website: "https://socratic.org",             tags: ["google","free","homework","visual"] },
+    { name: "Studyable",       slug: "studyable",         pricing: FREE,     categorySlug: "students",          featured: false, verified: false, apiAvailable: false, description: "Free AI study app with essay feedback, practice exams, and concept explanations.",                   website: "https://studyable.app",            tags: ["essay","exams","free"] },
+    { name: "Gauth AI",        slug: "gauth-ai",          pricing: FREEMIUM, categorySlug: "students",          featured: false, verified: false, apiAvailable: false, description: "AI homework helper solving math, physics, chemistry, and biology problems step-by-step.",          website: "https://gauthmath.com",            tags: ["homework","math","step-by-step"] },
+    { name: "Brainly AI",      slug: "brainly-ai",        pricing: FREEMIUM, categorySlug: "students",          featured: false, verified: true,  apiAvailable: false, description: "Community-based Q&A platform with AI assistance for homework and study questions.",               website: "https://brainly.com",              tags: ["community","homework","qa"] },
+    { name: "Photomath",       slug: "photomath",         pricing: FREEMIUM, categorySlug: "students",          featured: false, verified: true,  apiAvailable: false, description: "Camera-based math problem solver providing step-by-step solutions by scanning handwritten problems.", website: "https://photomath.com",           tags: ["camera","math","handwritten"] },
+    { name: "Mathway",         slug: "mathway",           pricing: FREEMIUM, categorySlug: "students",          featured: false, verified: true,  apiAvailable: false, description: "Instant math problem solver covering arithmetic to calculus with detailed step-by-step explanations.", website: "https://mathway.com",             tags: ["math","calculus","step-by-step"] },
+    { name: "Tutor AI",        slug: "tutor-ai",          pricing: FREEMIUM, categorySlug: "students",          featured: false, verified: false, apiAvailable: false, description: "AI-powered personalized tutor covering hundreds of topics across school subjects.",                  website: "https://tutorai.me",               tags: ["personalized","tutor","subjects"] },
   ];
+
+  console.log(`Seeding ${tools.length} tools across ${categoryDefs.length} categories...`);
+
+  let created = 0, skipped = 0;
 
   for (const tool of tools) {
     const { tags, categorySlug, ...toolData } = tool;
     const categoryId = catMap[categorySlug];
-    if (!categoryId) continue;
+    if (!categoryId) { console.warn(`❌ Missing category: ${categorySlug}`); continue; }
 
-    const created = await prisma.tool.upsert({
+    const t = await prisma.tool.upsert({
       where: { slug: toolData.slug },
-      update: {},
+      update: { ...toolData, categoryId },
       create: { ...toolData, categoryId },
     });
 
     for (const tagName of tags) {
-      const tagSlug = tagName.toLowerCase().replace(/\s+/g, "-");
+      const tagSlug = tagName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
       const tag = await prisma.tag.upsert({
         where: { slug: tagSlug },
         update: {},
         create: { name: tagName, slug: tagSlug },
       });
       await prisma.toolTag.upsert({
-        where: { toolId_tagId: { toolId: created.id, tagId: tag.id } },
+        where: { toolId_tagId: { toolId: t.id, tagId: tag.id } },
         update: {},
-        create: { toolId: created.id, tagId: tag.id },
+        create: { toolId: t.id, tagId: tag.id },
       });
     }
+    created++;
   }
 
-  console.log("✅ Seed complete!");
+  console.log(`✅ Done! ${created} tools seeded, ${skipped} skipped.`);
 }
 
-main().catch(console.error).finally(() => prisma.$disconnect());
+main()
+  .catch((e) => { console.error(e); process.exit(1); })
+  .finally(() => prisma.$disconnect());

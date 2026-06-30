@@ -1,0 +1,17 @@
+[
+  { "id": "chatbots",         "name": "Chatbots & Assistants",  "slug": "chatbots",         "icon": "🤖", "color": "#6366f1", "description": "Conversational AI assistants and chatbots" },
+  { "id": "coding",           "name": "Coding Tools",           "slug": "coding",           "icon": "💻", "color": "#3b82f6", "description": "AI tools for developers and programmers" },
+  { "id": "image-generation", "name": "Image Generation",       "slug": "image-generation", "icon": "🎨", "color": "#8b5cf6", "description": "Generate stunning images with AI" },
+  { "id": "video",            "name": "Video Generation",        "slug": "video",            "icon": "🎬", "color": "#ef4444", "description": "Create and edit videos using AI" },
+  { "id": "writing",         "name": "Writing Tools",           "slug": "writing",          "icon": "✍️", "color": "#f59e0b", "description": "AI-powered writing and content tools" },
+  { "id": "presentations",   "name": "Presentation Tools",      "slug": "presentations",    "icon": "📊", "color": "#10b981", "description": "Build slides and decks with AI" },
+  { "id": "audio",           "name": "Voice & Audio",           "slug": "audio",            "icon": "🎙️", "color": "#14b8a6", "description": "Voice synthesis, cloning, and audio AI" },
+  { "id": "music",           "name": "Music Generation",        "slug": "music",            "icon": "🎵", "color": "#ec4899", "description": "Create music and songs with AI" },
+  { "id": "productivity",    "name": "Productivity Tools",      "slug": "productivity",     "icon": "⚡", "color": "#f97316", "description": "Boost your productivity with AI" },
+  { "id": "automation",      "name": "Automation Tools",        "slug": "automation",       "icon": "🔧", "color": "#84cc16", "description": "Automate workflows with AI" },
+  { "id": "research",        "name": "Research Tools",          "slug": "research",         "icon": "🔬", "color": "#06b6d4", "description": "AI tools for research and analysis" },
+  { "id": "website-builders","name": "Website Builders",        "slug": "website-builders", "icon": "🌐", "color": "#a855f7", "description": "Build websites using AI" },
+  { "id": "design",          "name": "Design Tools",            "slug": "design",           "icon": "🖌️", "color": "#f43f5e", "description": "Design tools powered by AI" },
+  { "id": "seo-marketing",   "name": "SEO & Marketing",         "slug": "seo-marketing",    "icon": "📣", "color": "#eab308", "description": "SEO, ads, and marketing AI tools" },
+  { "id": "students",        "name": "Tools for Students",      "slug": "students",         "icon": "📚", "color": "#22c55e", "description": "AI tools for learning and education" }
+]

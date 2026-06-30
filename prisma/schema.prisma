@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  avatar    String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+
+  reviews   Review[]
+  favorites Favorite[]
+  accounts  Account[]
+  sessions  Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+<<<<<<< HEAD
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+=======
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+>>>>>>> 71d9c3e (aistack initatized)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+<<<<<<< HEAD
+
+=======
+>>>>>>> 71d9c3e (aistack initatized)
+  @@unique([identifier, token])
+}
+
+model Category {
+<<<<<<< HEAD
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  icon  String
+  color String @default("#6366f1")
+
+  tools Tool[]
+}
+
+model Tool {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  description String
+  longDesc    String?
+  website     String
+  logo        String?
+  pricing     PricingType @default(FREE)
+  featured    Boolean     @default(false)
+  verified    Boolean     @default(false)
+  apiAvailable Boolean    @default(false)
+  mobileSupport Boolean   @default(false)
+  categoryId  String
+  viewCount   Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+=======
+  id          String  @id @default(cuid())
+  name        String  @unique
+  slug        String  @unique
+  icon        String
+  color       String  @default("#6366f1")
+  description String  @default("")
+  tools       Tool[]
+}
+
+model Tool {
+  id            String      @id @default(cuid())
+  name          String
+  slug          String      @unique
+  description   String
+  longDesc      String?
+  website       String
+  logo          String?
+  pricing       PricingType @default(FREE)
+  featured      Boolean     @default(false)
+  verified      Boolean     @default(false)
+  apiAvailable  Boolean     @default(false)
+  mobileSupport Boolean     @default(false)
+  categoryId    String
+  viewCount     Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+>>>>>>> 71d9c3e (aistack initatized)
+
+  category  Category   @relation(fields: [categoryId], references: [id])
+  reviews   Review[]
+  favorites Favorite[]
+  tags      ToolTag[]
+}
+
+model Tag {
+  id    String    @id @default(cuid())
+  name  String    @unique
+  slug  String    @unique
+  tools ToolTag[]
+}
+
+model ToolTag {
+  toolId String
+  tagId  String
+  tool   Tool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+<<<<<<< HEAD
+
+=======
+>>>>>>> 71d9c3e (aistack initatized)
+  @@id([toolId, tagId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  userId    String
+  toolId    String
+  createdAt DateTime @default(now())
+<<<<<<< HEAD
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+=======
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+>>>>>>> 71d9c3e (aistack initatized)
+  @@unique([userId, toolId])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  toolId    String
+  createdAt DateTime @default(now())
+<<<<<<< HEAD
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum PricingType {
+  FREE
+  FREEMIUM
+  PAID
+}
+=======
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  @@unique([userId, toolId])
+}
+
+enum Role        { USER ADMIN }
+enum PricingType { FREE FREEMIUM PAID }
+>>>>>>> 71d9c3e (aistack initatized)

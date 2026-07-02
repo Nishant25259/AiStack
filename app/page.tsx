@@ -18,7 +18,8 @@ const features = [
 
 export default function HomePage() {
   const featured   = getFeaturedTools(6);
-  const categories = getCategories();
+  const CATEGORIES_TO_SHOW = 12; // change this number to show fewer/more categories on the main page
+  const categories = getCategories().slice(0, CATEGORIES_TO_SHOW);
 
   return (
     <div style={{ paddingTop: 60 }}>

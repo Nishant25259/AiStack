@@ -4,8 +4,8 @@ import { ToolCard, type ToolCardData } from "@/components/ToolCard";
 import { getFeaturedTools, getCategories } from "@/lib/db";
 
 const stats = [
-  { value: "116+", label: "AI Tools" },
-  { value: "15",   label: "Categories" },
+  { value: "450+", label: "AI Tools" },
+  { value: "39",   label: "Categories" },
   { value: "Free", label: "Always" },
   { value: "Daily",label: "Updated" },
 ];
@@ -31,7 +31,7 @@ export default function HomePage() {
 
         <div style={{ position: "relative", maxWidth: 740, margin: "0 auto" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: 99, padding: "0.35rem 1rem", marginBottom: "1.75rem", fontSize: "0.78rem", color: "var(--purple-light)", fontWeight: 600 }}>
-            <Sparkles size={13} /> 116+ AI tools · 15 categories · Zero signup
+            <Sparkles size={13} /> 450+ AI tools · 39 categories · Zero signup
           </div>
 
           <h1 style={{ fontSize: "clamp(2.4rem, 7vw, 4.25rem)", fontWeight: 900, lineHeight: 1.08, marginBottom: "1.25rem", letterSpacing: "-0.04em" }}>

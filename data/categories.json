@@ -1,17 +1,314 @@
 [
-  { "id": "chatbots",         "name": "Chatbots & Assistants",  "slug": "chatbots",         "icon": "🤖", "color": "#6366f1", "description": "Conversational AI assistants and chatbots" },
-  { "id": "coding",           "name": "Coding Tools",           "slug": "coding",           "icon": "💻", "color": "#3b82f6", "description": "AI tools for developers and programmers" },
-  { "id": "image-generation", "name": "Image Generation",       "slug": "image-generation", "icon": "🎨", "color": "#8b5cf6", "description": "Generate stunning images with AI" },
-  { "id": "video",            "name": "Video Generation",        "slug": "video",            "icon": "🎬", "color": "#ef4444", "description": "Create and edit videos using AI" },
-  { "id": "writing",         "name": "Writing Tools",           "slug": "writing",          "icon": "✍️", "color": "#f59e0b", "description": "AI-powered writing and content tools" },
-  { "id": "presentations",   "name": "Presentation Tools",      "slug": "presentations",    "icon": "📊", "color": "#10b981", "description": "Build slides and decks with AI" },
-  { "id": "audio",           "name": "Voice & Audio",           "slug": "audio",            "icon": "🎙️", "color": "#14b8a6", "description": "Voice synthesis, cloning, and audio AI" },
-  { "id": "music",           "name": "Music Generation",        "slug": "music",            "icon": "🎵", "color": "#ec4899", "description": "Create music and songs with AI" },
-  { "id": "productivity",    "name": "Productivity Tools",      "slug": "productivity",     "icon": "⚡", "color": "#f97316", "description": "Boost your productivity with AI" },
-  { "id": "automation",      "name": "Automation Tools",        "slug": "automation",       "icon": "🔧", "color": "#84cc16", "description": "Automate workflows with AI" },
-  { "id": "research",        "name": "Research Tools",          "slug": "research",         "icon": "🔬", "color": "#06b6d4", "description": "AI tools for research and analysis" },
-  { "id": "website-builders","name": "Website Builders",        "slug": "website-builders", "icon": "🌐", "color": "#a855f7", "description": "Build websites using AI" },
-  { "id": "design",          "name": "Design Tools",            "slug": "design",           "icon": "🖌️", "color": "#f43f5e", "description": "Design tools powered by AI" },
-  { "id": "seo-marketing",   "name": "SEO & Marketing",         "slug": "seo-marketing",    "icon": "📣", "color": "#eab308", "description": "SEO, ads, and marketing AI tools" },
-  { "id": "students",        "name": "Tools for Students",      "slug": "students",         "icon": "📚", "color": "#22c55e", "description": "AI tools for learning and education" }
+  {
+    "id": "chatbots",
+    "name": "Chatbots & Assistants",
+    "slug": "chatbots",
+    "icon": "\ud83e\udd16",
+    "color": "#6366f1",
+    "description": "Conversational AI assistants and chatbots"
+  },
+  {
+    "id": "coding",
+    "name": "Coding Tools",
+    "slug": "coding",
+    "icon": "\ud83d\udcbb",
+    "color": "#3b82f6",
+    "description": "AI tools for developers and programmers"
+  },
+  {
+    "id": "image-generation",
+    "name": "Image Generation",
+    "slug": "image-generation",
+    "icon": "\ud83c\udfa8",
+    "color": "#8b5cf6",
+    "description": "Generate stunning images with AI"
+  },
+  {
+    "id": "video",
+    "name": "Video Generation",
+    "slug": "video",
+    "icon": "\ud83c\udfac",
+    "color": "#ef4444",
+    "description": "Create and edit videos using AI"
+  },
+  {
+    "id": "writing",
+    "name": "Writing Tools",
+    "slug": "writing",
+    "icon": "\u270d\ufe0f",
+    "color": "#f59e0b",
+    "description": "AI-powered writing and content tools"
+  },
+  {
+    "id": "presentations",
+    "name": "Presentation Tools",
+    "slug": "presentations",
+    "icon": "\ud83d\udcca",
+    "color": "#10b981",
+    "description": "Build slides and decks with AI"
+  },
+  {
+    "id": "audio",
+    "name": "Voice & Audio",
+    "slug": "audio",
+    "icon": "\ud83c\udf99\ufe0f",
+    "color": "#14b8a6",
+    "description": "Voice synthesis, cloning, and audio AI"
+  },
+  {
+    "id": "music",
+    "name": "Music Generation",
+    "slug": "music",
+    "icon": "\ud83c\udfb5",
+    "color": "#ec4899",
+    "description": "Create music and songs with AI"
+  },
+  {
+    "id": "productivity",
+    "name": "Productivity Tools",
+    "slug": "productivity",
+    "icon": "\u26a1",
+    "color": "#f97316",
+    "description": "Boost your productivity with AI"
+  },
+  {
+    "id": "automation",
+    "name": "Automation Tools",
+    "slug": "automation",
+    "icon": "\ud83d\udd27",
+    "color": "#84cc16",
+    "description": "Automate workflows with AI"
+  },
+  {
+    "id": "research",
+    "name": "Research Tools",
+    "slug": "research",
+    "icon": "\ud83d\udd2c",
+    "color": "#06b6d4",
+    "description": "AI tools for research and analysis"
+  },
+  {
+    "id": "website-builders",
+    "name": "Website Builders",
+    "slug": "website-builders",
+    "icon": "\ud83c\udf10",
+    "color": "#a855f7",
+    "description": "Build websites using AI"
+  },
+  {
+    "id": "design",
+    "name": "Design Tools",
+    "slug": "design",
+    "icon": "\ud83d\udd8c\ufe0f",
+    "color": "#f43f5e",
+    "description": "Design tools powered by AI"
+  },
+  {
+    "id": "seo-marketing",
+    "name": "SEO & Marketing",
+    "slug": "seo-marketing",
+    "icon": "\ud83d\udce3",
+    "color": "#eab308",
+    "description": "SEO, ads, and marketing AI tools"
+  },
+  {
+    "id": "students",
+    "name": "Tools for Students",
+    "slug": "students",
+    "icon": "\ud83d\udcda",
+    "color": "#22c55e",
+    "description": "AI tools for learning and education"
+  },
+  {
+    "id": "meeting-assistants",
+    "name": "AI Meeting Assistants",
+    "slug": "meeting-assistants",
+    "icon": "\ud83c\udf99\ufe0f",
+    "color": "#818cf8",
+    "description": "Record, transcribe, and summarize meetings with AI"
+  },
+  {
+    "id": "transcription",
+    "name": "AI Transcription",
+    "slug": "transcription",
+    "icon": "\ud83d\udcdd",
+    "color": "#34d399",
+    "description": "Convert speech and audio to text with AI"
+  },
+  {
+    "id": "note-taking",
+    "name": "AI Note-Taking",
+    "slug": "note-taking",
+    "icon": "\ud83d\uddd2\ufe0f",
+    "color": "#fb923c",
+    "description": "Capture and organise knowledge with AI"
+  },
+  {
+    "id": "resume-builders",
+    "name": "AI Resume Builders",
+    "slug": "resume-builders",
+    "icon": "\ud83d\udcc4",
+    "color": "#38bdf8",
+    "description": "Build and optimise your CV with AI"
+  },
+  {
+    "id": "interview-prep",
+    "name": "AI Interview Prep",
+    "slug": "interview-prep",
+    "icon": "\ud83c\udfa4",
+    "color": "#c084fc",
+    "description": "Practice and ace job interviews with AI"
+  },
+  {
+    "id": "email-assistants",
+    "name": "AI Email Assistants",
+    "slug": "email-assistants",
+    "icon": "\ud83d\udce7",
+    "color": "#4ade80",
+    "description": "Write, reply, and manage emails with AI"
+  },
+  {
+    "id": "sales",
+    "name": "AI Sales Tools",
+    "slug": "sales",
+    "icon": "\ud83d\udcb0",
+    "color": "#fbbf24",
+    "description": "Supercharge your sales pipeline with AI"
+  },
+  {
+    "id": "crm",
+    "name": "AI CRM Tools",
+    "slug": "crm",
+    "icon": "\ud83e\udd1d",
+    "color": "#f472b6",
+    "description": "AI-powered customer relationship management"
+  },
+  {
+    "id": "pdf-docs",
+    "name": "AI PDF & Document Chat",
+    "slug": "pdf-docs",
+    "icon": "\ud83d\udcd1",
+    "color": "#a78bfa",
+    "description": "Chat with and extract insights from documents"
+  },
+  {
+    "id": "spreadsheets",
+    "name": "AI Spreadsheet Tools",
+    "slug": "spreadsheets",
+    "icon": "\ud83d\udcc8",
+    "color": "#2dd4bf",
+    "description": "AI for Excel, Sheets, and data analysis"
+  },
+  {
+    "id": "legal",
+    "name": "AI Legal Tools",
+    "slug": "legal",
+    "icon": "\u2696\ufe0f",
+    "color": "#94a3b8",
+    "description": "AI for contracts, legal research, and compliance"
+  },
+  {
+    "id": "finance",
+    "name": "AI Finance & Accounting",
+    "slug": "finance",
+    "icon": "\ud83d\udcb3",
+    "color": "#86efac",
+    "description": "AI tools for finance, accounting, and bookkeeping"
+  },
+  {
+    "id": "customer-support",
+    "name": "AI Customer Support",
+    "slug": "customer-support",
+    "icon": "\ud83d\udcac",
+    "color": "#67e8f9",
+    "description": "AI chatbots and agents for customer service"
+  },
+  {
+    "id": "ecommerce",
+    "name": "AI Ecommerce Tools",
+    "slug": "ecommerce",
+    "icon": "\ud83d\udecd\ufe0f",
+    "color": "#fda4af",
+    "description": "AI tools for online stores and product listings"
+  },
+  {
+    "id": "creative-tools",
+    "name": "AI Creative & Thumbnail Tools",
+    "slug": "creative-tools",
+    "icon": "\ud83d\uddbc\ufe0f",
+    "color": "#d946ef",
+    "description": "Create thumbnails, banners, and social visuals with AI"
+  },
+  {
+    "id": "translation",
+    "name": "AI Translation Tools",
+    "slug": "translation",
+    "icon": "\ud83c\udf0d",
+    "color": "#60a5fa",
+    "description": "Translate text, audio, and documents with AI"
+  },
+  {
+    "id": "education",
+    "name": "AI Education & Tutoring",
+    "slug": "education",
+    "icon": "\ud83c\udf93",
+    "color": "#4ade80",
+    "description": "AI tutors, study aids, and learning platforms"
+  },
+  {
+    "id": "open-source-ai",
+    "name": "AI Open-Source & Platforms",
+    "slug": "open-source-ai",
+    "icon": "\ud83e\udde0",
+    "color": "#e879f9",
+    "description": "Run, deploy, and explore open-source AI models"
+  },
+  {
+    "id": "code-editors",
+    "name": "AI Code Editors & IDEs",
+    "slug": "code-editors",
+    "icon": "\ud83d\udda5\ufe0f",
+    "color": "#6366f1",
+    "description": "AI-powered code editors, IDEs, and CLI coding agents"
+  },
+  {
+    "id": "code-assistants",
+    "name": "AI Code Assistants",
+    "slug": "code-assistants",
+    "icon": "\ud83e\udd16",
+    "color": "#3b82f6",
+    "description": "AI code review, debugging, and quality tools"
+  },
+  {
+    "id": "frontend-dev",
+    "name": "Frontend Development",
+    "slug": "frontend-dev",
+    "icon": "\ud83c\udfa8",
+    "color": "#8b5cf6",
+    "description": "AI tools for building UIs, components, and web apps"
+  },
+  {
+    "id": "backend-dev",
+    "name": "Backend Development",
+    "slug": "backend-dev",
+    "icon": "\u2699\ufe0f",
+    "color": "#10b981",
+    "description": "AI-powered backend frameworks, BaaS, and deployment tools"
+  },
+  {
+    "id": "databases",
+    "name": "AI Database Tools",
+    "slug": "databases",
+    "icon": "\ud83d\uddc4\ufe0f",
+    "color": "#f59e0b",
+    "description": "AI for SQL generation, vector databases, and data management"
+  },
+  {
+    "id": "apis-docs",
+    "name": "APIs & Documentation",
+    "slug": "apis-docs",
+    "icon": "\ud83d\udce1",
+    "color": "#ec4899",
+    "description": "AI tools for API testing, design, and documentation generation"
+  }
 ]

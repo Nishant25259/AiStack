@@ -24,8 +24,8 @@ To maintain instant startup, zero setup complexity, and fail-safe compilation in
 ```
 aistack/
 ├── data/
-│   ├── tools.json          ← 291 AI tools dataset (Source of truth)
-│   └── categories.json     ← 33 category metadata definitions
+│   ├── tools.json          ← 450+ AI tools dataset (Source of truth)
+│   └── categories.json     ← 39 category metadata definitions
 │
 ├── lib/
 │   ├── db.ts               ← Query helper layer (getTools, searchTools, getTool...)

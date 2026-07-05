@@ -7950,5 +7950,22 @@
       "graphql",
       "auto-spec"
     ]
+  },
+  {
+    "id": "459",
+    "name": "Tudo",
+    "slug": "tudo",
+    "description": "AI task manager for iPhone that turns voice notes and screenshots into organized actions.",
+    "website": "https://blynkai.app/tudo/",
+    "pricing": "FREE",
+    "featured": false,
+    "verified": true,
+    "apiAvailable": false,
+    "categorySlug": "productivity",
+    "tags": [
+      "task-management",
+      "productivity",
+      "voice-notes"
+    ]
   }
 ]

@@ -1,6 +1,6 @@
 # AIStack ⚡ — AI Tools Discovery Platform
 
-AIStack is a high-performance, zero-database curation directory for AI tools (think "Product Hunt meets Google for AI tools"). Users can browse, search, and filter across a curated catalog of **291 tools** classified into **33 categories**.
+AIStack is a high-performance, zero-database curation directory for AI tools (think "Product Hunt meets Google for AI tools"). Users can browse, search, and filter across a curated catalog of **460 tools** classified into **39 categories**.
 
 To maintain instant startup, zero setup complexity, and fail-safe compilation inside sandboxed environments, the project uses a **Next.js static JSON data-layer model** instead of active database queries.
 

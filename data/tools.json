@@ -7966,6 +7966,23 @@
       "task-management",
       "productivity",
       "voice-notes"
+      ]
+  }, 
+  {
+    "id": "460",
+    "name": "Cardify",
+    "slug": "cardify",
+    "description": "AI flashcard app that turns mistake-question photos into concept, weakness, and variant cards.",
+    "website": "https://blynkai.app/cardify/",
+    "pricing": "FREE",
+    "featured": false,
+    "verified": true,
+    "apiAvailable": false,
+    "categorySlug": "education",
+    "tags": [
+      "flashcards",
+      "k12-learning",
+      "study-tools"
     ]
   }
 ]

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 
+const SITE_URL = "https://ai-stack-ebon.vercel.app";
+
 export const metadata: Metadata = {
   title: { default: "AIStack — Discover the Best AI Tools", template: "%s | AIStack" },
   description: "The largest curated directory of AI tools. Discover, compare, and save the best AI tools for developers, creators, and teams.",
@@ -10,6 +12,10 @@ export const metadata: Metadata = {
     title: "AIStack — Discover the Best AI Tools",
     description: "The largest curated directory of AI tools.",
     type: "website",
+    url: SITE_URL,
+  },
+  twitter: {
+    card: "summary_large_image",
   },
 };
 
@@ -20,6 +26,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link rel="canonical" href={SITE_URL} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@ai_stack" />
+        <meta property="og:site_name" content="AIStack" />
+        <meta property="og:url" content={SITE_URL} />
+        <meta property="og:type" content="website" />
+
+        {/* JSON-LD organization + website */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            url: SITE_URL,
+            name: "AIStack",
+            description: "The largest curated directory of AI tools. Discover, compare, and save the best AI tools for developers, creators, and teams.",
+            publisher: {
+              "@type": "Organization",
+              name: "AIStack",
+              url: SITE_URL,
+            },
+          })}
+        </script>
       </head>
       <body>
         <Navbar />

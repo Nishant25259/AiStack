@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ai-stack-ebon.vercel.app/sitemap.xml
+Host: ai-stack-ebon.vercel.app

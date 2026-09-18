@@ -8003,5 +8003,23 @@
       "mobile",
       "mcp"
     ]
+  },
+  {
+    "id": "462",
+    "name": "FlipWorth",
+    "slug": "flipworth",
+    "description": "Photo-based resale price research for secondhand sellers: snap an item and get an estimated resale range, a buy or pass verdict, a suggested list price and where to sell it. Free to try in the browser, also on iPhone.",
+    "website": "https://flipworth.silentdirectivellc.com/?utm_source=aistack&utm_medium=resource-directory",
+    "pricing": "FREEMIUM",
+    "featured": false,
+    "verified": false,
+    "apiAvailable": false,
+    "categorySlug": "ecommerce",
+    "tags": [
+      "resale",
+      "pricing",
+      "ecommerce",
+      "reselling"
+    ]
   }
 ]

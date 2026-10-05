@@ -8003,5 +8003,23 @@
       "mobile",
       "mcp"
     ]
-  }
+  },
+{
+  "id": "462",
+  "name": "Orkas",
+  "slug": "orkas",
+  "categorySlug": "productivity",
+  "description": "Open-source, local-first desktop AI workforce coordinated by a Commander through one chat; free core, model/service costs may apply.",
+  "pricing": "FREE",
+  "website": "https://orkas.ai/?source=dir_aistack",
+  "featured": false,
+  "verified": false,
+  "apiAvailable": false,
+  "tags": [
+    "local-first",
+    "desktop",
+    "ai-workforce",
+    "productivity"
+  ]
+}
 ]

@@ -8003,5 +8003,23 @@
       "mobile",
       "mcp"
     ]
+  },
+  {
+    "id": "462",
+    "name": "AI 만화 번역기",
+    "slug": "ai-manga-translator",
+    "description": "Ficory LLC의 기업급 AI 만화 번역기는 모든 지원 언어로 만화를 읽고 개인 일괄·맞춤 번역을 하며, 스튜디오는 완전한 온라인 Photoshop 스타일 편집기를 쓰고 개인은 API를 작업 흐름에 연결합니다.",
+    "website": "https://www.mangatranslate.com/ko/ai-manga-translator/",
+    "pricing": "FREEMIUM",
+    "featured": false,
+    "verified": true,
+    "apiAvailable": true,
+    "categorySlug": "translation",
+    "tags": [
+      "manga-translation",
+      "image-editing",
+      "batch-translation",
+      "workflow-api"
+    ]
   }
 ]
